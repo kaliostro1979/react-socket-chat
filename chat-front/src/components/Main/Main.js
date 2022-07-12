@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
 import Title from "../UI/Title";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import {auth} from "../../firebase/firebase";
 
 const Main = ({socket, userName, setUserName, room, setRoom}) => {
 
@@ -17,6 +19,14 @@ const Main = ({socket, userName, setUserName, room, setRoom}) => {
         }
     }
 
+    const handleSignOut = ()=>{
+        signOut(auth).then(() => {
+            // Sign-out successful.
+        }).catch((error) => {
+            // An error happened.
+        });
+    }
+
    useEffect(()=>{
        if (isLogged){
            return navigate("/chat");
@@ -29,6 +39,7 @@ const Main = ({socket, userName, setUserName, room, setRoom}) => {
             <Input value={userName} onChange={setUserName} callBack={null} type={"text"} name={"user_name"} id={"chat-message"}/>
             <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"}/>
             <Button className={"button-primary"} text={"Join"} callBack={joinRoom}/>
+            <Button className={"button-primary"} text={"Log out"} callBack={handleSignOut}/>
         </div>
     );
 };

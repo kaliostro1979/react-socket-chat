@@ -6,6 +6,8 @@ import {useState} from "react";
 import Chat from "./components/Chat/Chat";
 import Main from "./components/Main/Main";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
 
 function App() {
     const socket = io.connect("http://localhost:3001")
@@ -22,6 +24,8 @@ function App() {
                                 <Route path={"/"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room}
                                                                    setRoom={setRoom}/>}/>
                                 <Route path={"/chat"} element={<Chat room={room} socket={socket} userName={userName}/>}/>
+                                <Route path={"/login"} element={<Login/>}/>
+                                <Route path={"/register"} element={<Register/>}/>
                             </Routes>
                         </div>
                     </div>
