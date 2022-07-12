@@ -1,51 +1,45 @@
-import React, {useState} from 'react';
-import { signInWithCustomToken, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import React, {useState, useEffect} from 'react';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import {auth} from "../../firebase/firebase";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import Title from "../UI/Title";
 
-const Login = () => {
+const Login = ({user}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     let navigate = useNavigate()
 
-    onAuthStateChanged(auth, (user) => {
-        console.log('user', user)
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
-            const uid = user.uid;// ...
-            navigate("/")
-        } else {
-            // User is signed out
-            // ...
+    useEffect(()=>{
+        if (user){
+            return navigate("/");
         }
-    })
+    },[navigate, user])
 
     const login = async (e)=>{
         e.preventDefault()
         if (auth){
            await signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    console.log(user)
-                    navigate("/")
+                    navigate("/start-chat")
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
+
                 });
         }
     }
 
     return (
-        <div className={"form-wrapper"}>
+        <div className={"form-wrapper wrapper"}>
+            <Title className={"form-title"} title={"Log in to your account"}/>
             <form>
                 <Input onChange={setEmail} value={email} name={"email"} type={"email"} callBack={null} id={"auth-email"} placeholder={"E-mail"}/>
                 <Input onChange={setPassword} value={password} name={"password"} type={"password"} callBack={null} id={"auth-password"} placeholder={"Password"}/>
-                <Button callBack={login} className={"button-primary"} text={"Login"} type={"submit"}/>
+                <div className={"buttons-wrapper"}>
+                    <Button callBack={login} className={"button-primary"} text={"Login"} type={"submit"}/>
+                    <Link to={"/register"}>Register</Link>
+                </div>
             </form>
         </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({value, onChange, callBack, type, id, name, placeholder}) => {
+const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled}) => {
     return (
         <input
             type={type}
@@ -10,6 +10,7 @@ const Input = ({value, onChange, callBack, type, id, name, placeholder}) => {
             onKeyDown={callBack ? (e)=> e.key === 'Enter' && callBack() : null}
             value={value}
             placeholder={placeholder}
+            disabled={disabled}
         />
     );
 };

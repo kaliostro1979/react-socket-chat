@@ -1,21 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from 'react';
 import { signOut } from "firebase/auth";
 import Title from "../UI/Title";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import {auth} from "../../firebase/firebase";
+import {useNavigate} from "react-router-dom";
+import FriendsList from "../FriendsList/FriendsList";
 
-const Main = ({socket, userName, setUserName, room, setRoom}) => {
+const Main = ({socket, userName, setUserName, room, setRoom, user}) => {
 
-    const [isLogged, setIsLogged] = useState(false)
-    let navigate = useNavigate();
-
+    const navigate = useNavigate()
 
     const joinRoom = () => {
-        if (userName !== "" && room !== "") {
+        if (user.displayName && room !== "") {
             socket.emit("join_room", room)
-            setIsLogged(true)
+            navigate("/chat")
         }
     }
 
@@ -28,18 +27,25 @@ const Main = ({socket, userName, setUserName, room, setRoom}) => {
     }
 
    useEffect(()=>{
-       if (isLogged){
-           return navigate("/chat");
+       if (user){
+           return navigate(`/start-chat/${user.uid}`);
+       }else {
+           return navigate("/");
        }
-   },[isLogged, navigate])
+   },[navigate, user])
 
     return (
-        <div className={'chat-auth'}>
-            <Title title={"Join A Chat"} className={'chat__title'}/>
-            <Input value={userName} onChange={setUserName} callBack={null} type={"text"} name={"user_name"} id={"chat-message"}/>
-            <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"}/>
-            <Button className={"button-primary"} text={"Join"} callBack={joinRoom}/>
-            <Button className={"button-primary"} text={"Log out"} callBack={handleSignOut}/>
+        <div className={"start-chat__wrapper"}>
+            <FriendsList/>
+            <div className={'chat-main__wrapper wrapper'}>
+                <Title title={"Join A Chat"} className={'chat__title'}/>
+                <Input value={user ? user.displayName : ""} onChange={null} callBack={null} type={"text"} name={"user_name"} id={"chat-message"} disabled={true}/>
+                <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"} disabled={false}/>
+                <div className={"buttons-wrapper"}>
+                    <Button className={"button-primary"} text={"Join"} callBack={joinRoom}/>
+                    <Button className={"button-primary"} text={"Log out"} callBack={handleSignOut}/>
+                </div>
+            </div>
         </div>
     );
 };
