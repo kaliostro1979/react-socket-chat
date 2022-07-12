@@ -19,23 +19,48 @@
     border: 1px solid blue;
     border-radius: 4px;
     margin-bottom: 15px;
-    overflow-y: auto;
     padding: 10px 15px;
   }
 }
 
-.you {
+.cloud-wrapper {
+  display: flex;
+  width: 100%;
+
+  &.you {
+    justify-content: flex-start;
+
+    .cloud-item__content {
+      background-color: green;
+    }
+  }
+
+  &.other {
+    justify-content: flex-end;
+
+    .cloud-item__content {
+      background-color: blue;
+    }
+  }
+}
+
+.cloud-item {
+  margin-bottom: 20px;
+}
+
+.cloud-item__content {
   padding: 10px 15px;
   border-radius: 4px;
-  background-color: green;
   color: white;
-  width: fit-content;
-  margin-bottom: 20px;
+  width: 100%;
+  min-width: 110px;
 }
 
 .author-meta {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  margin-top: 5px;
 }
 .author-meta__text {
   font-size: 20px;

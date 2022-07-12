@@ -21,7 +21,7 @@ const Chat = ({socket, room, userName}) => {
 
             await socket.emit("send_message", messageData)
 
-            /*setMessageList((prev) => [...prev, messageData])*/
+            setMessageList((prev) => [...prev, messageData])
             setMessage("")
         }
 
