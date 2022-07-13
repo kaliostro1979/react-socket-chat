@@ -1,0 +1,49 @@
+.home-inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.logo {
+  width: 50px;
+}
+
+.home-buttons {
+  display: flex;
+  align-items: center;
+
+  .link {
+
+    &:not(&:last-child) {
+      margin-right: 15px;
+    }
+
+    a {
+      margin: 0;
+
+    }
+  }
+}
+
+.home-current-user {
+  padding: 10px 15px;
+  background-color: lightblue;
+  text-align: center;
+  margin-right: 15px;
+  border-radius: 4px;
+
+  a {
+    color: white;
+    text-transform: capitalize;
+  }
+}
+
+.home-buttons__inner {
+  display: flex;
+}

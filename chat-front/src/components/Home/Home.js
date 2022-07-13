@@ -1,37 +1,26 @@
-import React from 'react';
-import {Link} from "react-router-dom";
-import Title from "../UI/Title";
-import {auth} from "../../firebase/firebase";
-import {signOut} from "firebase/auth";
-import Button from "../UI/Button";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {getUsers} from "../../redux/actions/getUsers";
+import UserCard from "../UserCard/UserCard";
 
 
+const Home = ({currentUser}) => {
+    const users = useSelector(state => state.users)
+    const dispatch = useDispatch()
 
-const Home = ({user}) => {
-
-    const handleSignOut = ()=>{
-        signOut(auth).then(() => {
-            // Sign-out successful.
-        }).catch((error) => {
-            // An error happened.
-        });
-    }
-
-
+    useEffect(() => {
+        dispatch(getUsers())
+    }, [dispatch])
 
     return (
-        <div>
-            <Title title={"Home"} className={"home-title"}/>
-            {
-                user ? <div>
-                        <p>{user.displayName}</p>
-                        <Button className={"button-secondary"} text={"Logout"} callBack={handleSignOut}/>
-                    </div> :
-                    <div className={"link"}>
-                        <Link to={"/login"}>Login</Link>
-                        <Link to={"/register"}>Register</Link>
-                    </div>
-            }
+        <div className={"home-wrapper"}>
+            <div className={"home-inner"}>
+                <div className={"home-users"}>
+                    {
+                        users.length ? users.map((user) => <UserCard user={user} key={user.uid} currentUser={currentUser}/>) : null
+                    }
+                </div>
+            </div>
         </div>
     );
 };

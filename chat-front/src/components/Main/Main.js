@@ -37,14 +37,13 @@ const Main = ({socket, room, setRoom, user}) => {
 
     return (
         <div className={"start-chat__wrapper"}>
-            <FriendsList/>
             <div className={'chat-main__wrapper wrapper'}>
                 <Link to={"/"} className={"button-secondary"}>Back to home</Link>
                 <Title title={"Join A Chat"} className={'chat__title'}/>
                 <Input value={user ? user.displayName : ""} onChange={null} callBack={null} type={"text"} name={"user_name"} id={"chat-message"} disabled={true}/>
                 <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"} disabled={false}/>
                 <div className={"buttons-wrapper"}>
-                    <Button className={"button-primary"} text={"Join"} callBack={joinRoom}/>
+                    <Button className={"button-ternary"} text={"Join"} callBack={joinRoom}/>
                     <Button className={"button-primary"} text={"Log out"} callBack={handleSignOut}/>
                 </div>
             </div>

@@ -1,0 +1,37 @@
+.home-users {
+  min-height: 100vh;
+}
+
+.user-card__wrapper {
+  position: relative;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  min-width: 300px;
+  background-color: #f2f4f5;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+  }
+
+  p {
+    font-size: 14px;
+    text-transform: capitalize;
+  }
+
+  &.current-user {
+    background-color: lightblue;
+    color: white;
+
+    &:before {
+      background-color: green;
+    }
+  }
+}
