@@ -26,7 +26,7 @@ function App() {
             <div className="App">
                 <div className="container">
                     <Routes>
-                        <Route path={"/"} element={<Home/>}/>
+                        <Route path={"/"} element={<Home user={currentUser}/>}/>
                         <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser}/>}>
                             <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser}/>}/>
                         </Route>

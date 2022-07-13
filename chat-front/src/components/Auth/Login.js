@@ -32,6 +32,7 @@ const Login = ({user}) => {
 
     return (
         <div className={"form-wrapper wrapper"}>
+            <Link to={"/"}>Back to home</Link>
             <Title className={"form-title"} title={"Log in to your account"}/>
             <form>
                 <Input onChange={setEmail} value={email} name={"email"} type={"email"} callBack={null} id={"auth-email"} placeholder={"E-mail"}/>

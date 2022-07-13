@@ -30,7 +30,7 @@ const Chat = ({socket, room, user, setRoom}) => {
     }
 
     const exitRoom = ()=>{
-        navigate(`/${user.uid}`)
+        navigate(`/start-chat/${user.uid}`)
         setRoom("")
     }
 

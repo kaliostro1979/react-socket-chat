@@ -4,10 +4,10 @@ import Title from "../UI/Title";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import {auth} from "../../firebase/firebase";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import FriendsList from "../FriendsList/FriendsList";
 
-const Main = ({socket, userName, setUserName, room, setRoom, user}) => {
+const Main = ({socket, room, setRoom, user}) => {
 
     const navigate = useNavigate()
 
@@ -21,6 +21,7 @@ const Main = ({socket, userName, setUserName, room, setRoom, user}) => {
     const handleSignOut = ()=>{
         signOut(auth).then(() => {
             // Sign-out successful.
+            navigate("/login");
         }).catch((error) => {
             // An error happened.
         });
@@ -30,7 +31,7 @@ const Main = ({socket, userName, setUserName, room, setRoom, user}) => {
        if (user){
            return navigate(`/start-chat/${user.uid}`);
        }else {
-           return navigate("/");
+           return navigate("/login");
        }
    },[navigate, user])
 
@@ -38,6 +39,7 @@ const Main = ({socket, userName, setUserName, room, setRoom, user}) => {
         <div className={"start-chat__wrapper"}>
             <FriendsList/>
             <div className={'chat-main__wrapper wrapper'}>
+                <Link to={"/"} className={"button-secondary"}>Back to home</Link>
                 <Title title={"Join A Chat"} className={'chat__title'}/>
                 <Input value={user ? user.displayName : ""} onChange={null} callBack={null} type={"text"} name={"user_name"} id={"chat-message"} disabled={true}/>
                 <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"} disabled={false}/>

@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import { createUserWithEmailAndPassword, updateProfile  } from "firebase/auth";
-import {auth} from "../../firebase/firebase"
+import {auth, db} from "../../firebase/firebase"
 import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
+import { doc, setDoc } from "firebase/firestore";
 
 
 const Register = ({user}) => {
@@ -17,21 +18,22 @@ const Register = ({user}) => {
 
     useEffect(()=>{
         if (user){
-            return navigate("/");
+            return navigate("/login");
         }
     },[navigate, user])
-
 
     const register = (e)=>{
         e.preventDefault()
         if (email !== "" && password !== "" && password === repeatPassword){
-            createUserWithEmailAndPassword(auth, email, password)
+           createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
 
                     updateProfile(user, {
                         displayName: userName
                     }).then(() => {
+                        const userRef = doc(db, 'users', user.uid);
+                        setDoc(userRef, JSON.parse(JSON.stringify(user))).then();
                         navigate("/")
                     }).catch((error) => {
 
@@ -47,6 +49,7 @@ const Register = ({user}) => {
 
     return (
         <div className={"form-wrapper wrapper"}>
+            <Link to={"/"}>Back to home</Link>
             <Title className={"form-title"} title={"Register new account"}/>
             <form>
                 {

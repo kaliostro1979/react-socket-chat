@@ -1,28 +1,37 @@
 import React from 'react';
-import {auth} from "../../firebase/firebase"
-import { getUsers } from "firebase/auth";
+import {Link} from "react-router-dom";
+import Title from "../UI/Title";
+import {auth} from "../../firebase/firebase";
+import {signOut} from "firebase/auth";
+import Button from "../UI/Button";
 
-const Home = () => {
 
-    auth.getUsers()
-        .then((getUsersResult) => {
-            console.log('Successfully fetched user data:');
-            getUsersResult.users.forEach((userRecord) => {
-                console.log(userRecord);
-            });
 
-            console.log('Unable to find users corresponding to these identifiers:');
-            getUsersResult.notFound.forEach((userIdentifier) => {
-                console.log(userIdentifier);
-            });
-        })
-        .catch((error) => {
-            console.log('Error fetching user data:', error);
+const Home = ({user}) => {
+
+    const handleSignOut = ()=>{
+        signOut(auth).then(() => {
+            // Sign-out successful.
+        }).catch((error) => {
+            // An error happened.
         });
+    }
+
+
 
     return (
         <div>
-            <h1>Home</h1>
+            <Title title={"Home"} className={"home-title"}/>
+            {
+                user ? <div>
+                        <p>{user.displayName}</p>
+                        <Button className={"button-secondary"} text={"Logout"} callBack={handleSignOut}/>
+                    </div> :
+                    <div className={"link"}>
+                        <Link to={"/login"}>Login</Link>
+                        <Link to={"/register"}>Register</Link>
+                    </div>
+            }
         </div>
     );
 };
