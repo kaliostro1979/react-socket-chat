@@ -10,14 +10,16 @@ const Home = ({currentUser}) => {
 
     useEffect(() => {
         dispatch(getUsers())
-    }, [dispatch])
+    }, [dispatch, users])
 
     return (
         <div className={"home-wrapper"}>
             <div className={"home-inner"}>
                 <div className={"home-users"}>
                     {
-                        users.length ? users.map((user) => <UserCard user={user} key={user.uid} currentUser={currentUser}/>) : null
+                        users.length ? users.map((user) => {
+                            return <UserCard user={user} key={user.uid} currentUser={currentUser}/>
+                        }) : null
                     }
                 </div>
             </div>

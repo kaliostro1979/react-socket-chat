@@ -3,7 +3,8 @@ import {Link, useNavigate} from "react-router-dom";
 import Logo from "../../icons/logo";
 import Button from "../UI/Button";
 import {signOut} from "firebase/auth";
-import {auth} from "../../firebase/firebase";
+import {auth, db} from "../../firebase/firebase";
+import {doc, setDoc} from "firebase/firestore";
 
 const Header = ({currentUser}) => {
 
@@ -11,6 +12,10 @@ const Header = ({currentUser}) => {
 
     const handleSignOut = () => {
         signOut(auth).then(() => {
+            if (currentUser){
+                const userRef = doc(db, 'users', currentUser.uid);
+                setDoc(userRef, {loggedIn: false}, {merge: true}).then();
+            }
             navigate("/login")
         }).catch((error) => {
             // An error happened.

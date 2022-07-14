@@ -2,15 +2,18 @@ import React, {useState, useEffect} from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
-import {auth} from "../../firebase/firebase";
+import {auth, db} from "../../firebase/firebase";
 import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
+import {doc, setDoc} from "firebase/firestore";
+
 
 const Login = ({user}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     let navigate = useNavigate()
+
 
     useEffect(()=>{
         if (user){
@@ -23,6 +26,8 @@ const Login = ({user}) => {
         if (auth){
            await signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
+                    const userRef = doc(db, 'users', userCredential.user.uid);
+                    setDoc(userRef, {loggedIn: true}, {merge: true}).then();
                     navigate("/start-chat")
                 })
                 .catch((error) => {

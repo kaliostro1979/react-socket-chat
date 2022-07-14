@@ -5,7 +5,7 @@ import avatarPlaceholder from "../../assets/images/avatar-placeholder.png"
 const UserCard = ({user, currentUser}) => {
 
     return (
-        <div className={user.uid === currentUser?.uid ? "user-card__wrapper current-user" : "user-card__wrapper"}>
+        <div className={user.loggedIn ? "user-card__wrapper current-user" : "user-card__wrapper"}>
             <div className={"user-avatar"}>
                 <img src={user.photoURL ? user.photoURL : avatarPlaceholder} alt=""/>
             </div>

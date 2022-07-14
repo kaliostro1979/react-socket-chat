@@ -41,8 +41,9 @@ const Register = ({user}) => {
                                     photoURL: avatar ? url : null
                                 }).then(() => {
                                     const userRef = doc(db, 'users', user.uid);
-                                    setDoc(userRef, JSON.parse(JSON.stringify(user))).then();
-                                    navigate("/start-chat")
+                                    setDoc(userRef, JSON.parse(JSON.stringify(user))).then(()=>{
+                                        setDoc(userRef, {loggedIn: true}, {merge: true}).then();
+                                    });
                                 }).catch((error) => {
 
                                 });
@@ -54,7 +55,9 @@ const Register = ({user}) => {
                             photoURL: null
                         }).then(() => {
                             const userRef = doc(db, 'users', user.uid);
-                            setDoc(userRef, JSON.parse(JSON.stringify(user))).then();
+                            setDoc(userRef, JSON.parse(JSON.stringify(user))).then(()=>{
+                                setDoc(userRef, {loggedIn: true}, {merge: true}).then();
+                            });
                             navigate("/start-chat")
                         }).catch((error) => {
 
