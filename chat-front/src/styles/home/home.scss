@@ -1,3 +1,7 @@
+.home-wrapper {
+  padding: 80px 0;
+}
+
 .home-inner {
   display: flex;
   justify-content: space-between;
@@ -33,15 +37,12 @@
 
 .home-current-user {
   padding: 10px 15px;
-  background-color: lightblue;
+  background-color: blue;
   text-align: center;
   margin-right: 15px;
   border-radius: 4px;
-
-  a {
-    color: white;
-    text-transform: capitalize;
-  }
+  color: white;
+  text-transform: capitalize;
 }
 
 .home-buttons__inner {

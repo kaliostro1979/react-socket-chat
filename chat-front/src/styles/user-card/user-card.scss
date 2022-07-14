@@ -4,6 +4,8 @@
 
 .user-card__wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
   padding: 10px 15px;
   margin-bottom: 10px;
   min-width: 300px;
@@ -21,11 +23,6 @@
     border-radius: 50%;
   }
 
-  p {
-    font-size: 14px;
-    text-transform: capitalize;
-  }
-
   &.current-user {
     background-color: lightblue;
     color: white;
@@ -33,5 +30,29 @@
     &:before {
       background-color: green;
     }
+  }
+}
+
+.user-username{
+  font-size: 20px;
+  text-transform: capitalize;
+}
+
+.user-avatar{
+  position: relative;
+  width: 50px;
+  padding-top: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 }

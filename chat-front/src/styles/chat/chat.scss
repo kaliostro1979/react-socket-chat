@@ -93,10 +93,17 @@
   a {
     display: inline-block;
     background-color: black;
+    border: 1px solid black;
     color: white;
     padding: 10px 15px;
     border-radius: 4px;
     min-width: 150px;
     text-align: center;
+    font-size: 16px;
+
+    &:hover {
+      background-color: white;
+      color: black;
+    }
   }
 }

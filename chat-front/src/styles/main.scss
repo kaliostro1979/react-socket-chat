@@ -76,6 +76,8 @@ button, .button {
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
+  font-size: 16px;
+
   &.button-primary {
     background-color: black;
     color: white;
@@ -115,4 +117,11 @@ button, .button {
     margin-bottom: 10px;
     margin-right: 15px;
   }
+}
+
+.error {
+  font-size: 16px;
+  color: red;
+  margin: 15px auto;
+  text-align: center;
 }
