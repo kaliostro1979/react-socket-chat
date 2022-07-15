@@ -1,0 +1,23 @@
+.preloader{
+  position: fixed;
+  background-color: #ffffff;
+  width: 100%;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.preloader-icon {
+  width: 60px;
+
+  svg{
+    display:inline-block;
+
+    path {
+      fill: #000000;
+    }
+  }
+}

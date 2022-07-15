@@ -43,6 +43,15 @@ const Chat = ({socket, room, user, setRoom}) => {
         }
     }
 
+    const handleInputMessage =(e)=>{
+
+        setMessage(e.target.value)
+        socket.emit('typing', {
+            userId: user.uid,
+            userName: user.displayName
+        })
+    }
+
     const exitRoom = ()=>{
         navigate(`/start-chat/${user.uid}`)
         setRoom("")
@@ -83,7 +92,7 @@ const Chat = ({socket, room, user, setRoom}) => {
             <div className={"footer"}>
                 <Input
                     callBack={sendMessage}
-                    onChange={setMessage}
+                    onChange={handleInputMessage}
                     value={message}
                     type={"text"}
                     isTyping={notifyIfUserTyping}
