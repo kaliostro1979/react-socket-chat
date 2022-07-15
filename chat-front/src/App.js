@@ -31,7 +31,7 @@ function App() {
             setLogged(snapshot)
         })
     }, [])
-
+    console.log(currentUser);
     return (
         <BrowserRouter>
             <div className="App">

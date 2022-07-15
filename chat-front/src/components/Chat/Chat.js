@@ -61,7 +61,7 @@ const Chat = ({socket, room, user, setRoom}) => {
                 <Title title={`Logged in as ${user && user.displayName} in Room N ${room}`} className={'chat__title'}/>
             </div>
             <div className={"body-wrapper"}>
-                <ScrollToBottom>
+                <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>
                     <div className={"body"}>
                         {
                             messageList.length ? messageList.map((item, i) => {

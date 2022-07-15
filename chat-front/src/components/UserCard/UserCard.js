@@ -1,7 +1,6 @@
 import React from 'react';
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.png"
 
-
 const UserCard = ({user}) => {
 
     return (

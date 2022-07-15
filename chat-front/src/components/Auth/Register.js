@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword, updateProfile  } from "firebase/auth";
 import {auth, db, storage} from "../../firebase/firebase"
 import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
-import { doc, setDoc } from "firebase/firestore";
+import {doc, setDoc, writeBatch} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 
@@ -43,6 +43,9 @@ const Register = ({user}) => {
                                     const userRef = doc(db, 'users', user.uid);
                                     setDoc(userRef, JSON.parse(JSON.stringify(user))).then(()=>{
                                         setDoc(userRef, {loggedIn: true}, {merge: true}).then();
+                                        const batch = writeBatch(db);
+                                        batch.update(userRef, {loggedIn: true, room: user.uid});
+                                        batch.commit().then();
                                     });
                                 }).catch((error) => {
 
