@@ -22,7 +22,7 @@ const Register = ({user}) => {
 
     useEffect(()=>{
         if (user){
-            return navigate("/login");
+            return navigate("/");
         }
     },[navigate, user])
 
@@ -60,7 +60,7 @@ const Register = ({user}) => {
                             });
                             navigate("/start-chat")
                         }).catch((error) => {
-
+                            console.log(error.message);
                         });
                     }
                 })

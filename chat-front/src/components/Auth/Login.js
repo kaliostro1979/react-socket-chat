@@ -5,7 +5,7 @@ import Button from "../UI/Button";
 import {auth, db} from "../../firebase/firebase";
 import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
-import {doc, setDoc} from "firebase/firestore";
+import {doc, writeBatch} from "firebase/firestore";
 
 
 const Login = ({user}) => {
@@ -25,10 +25,12 @@ const Login = ({user}) => {
         e.preventDefault()
         if (auth){
            await signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
+                    const batch = writeBatch(db);
                     const userRef = doc(db, 'users', userCredential.user.uid);
-                    setDoc(userRef, {loggedIn: true}, {merge: true}).then();
-                    navigate("/start-chat")
+                    batch.update(userRef, {loggedIn: true});
+                    await batch.commit();
+                    navigate("/")
                 })
                 .catch((error) => {
                     setError("Something went wrong")

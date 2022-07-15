@@ -4,19 +4,20 @@ import Logo from "../../icons/logo";
 import Button from "../UI/Button";
 import {signOut} from "firebase/auth";
 import {auth, db} from "../../firebase/firebase";
-import {doc, setDoc} from "firebase/firestore";
+import {doc, writeBatch} from "firebase/firestore";
 
-const Header = ({currentUser}) => {
+const Header = ({currentUser, setRoom}) => {
 
     const navigate = useNavigate()
 
     const handleSignOut = () => {
-        signOut(auth).then(() => {
-            if (currentUser){
-                const userRef = doc(db, 'users', currentUser.uid);
-                setDoc(userRef, {loggedIn: false}, {merge: true}).then();
-            }
-            navigate("/login")
+        signOut(auth).then(async () => {
+            const batch = writeBatch(db);
+            const userRef = doc(db, 'users', currentUser.uid);
+            batch.update(userRef, {loggedIn: false});
+            await batch.commit();
+            setRoom("")
+            navigate("/")
         }).catch((error) => {
             // An error happened.
         });

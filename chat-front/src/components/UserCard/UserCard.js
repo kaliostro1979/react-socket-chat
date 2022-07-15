@@ -2,7 +2,7 @@ import React from 'react';
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.png"
 
 
-const UserCard = ({user, currentUser}) => {
+const UserCard = ({user}) => {
 
     return (
         <div className={user.loggedIn ? "user-card__wrapper current-user" : "user-card__wrapper"}>

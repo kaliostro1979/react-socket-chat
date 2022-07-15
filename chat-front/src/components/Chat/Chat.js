@@ -12,6 +12,12 @@ const Chat = ({socket, room, user, setRoom}) => {
     const [messageList, setMessageList] = useState([])
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        if (!user){
+            return navigate("/login");
+        }
+    },[navigate, user])
+
     const sendMessage = async () => {
         if (message !== "") {
             const messageData = {

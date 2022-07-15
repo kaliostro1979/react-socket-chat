@@ -4,13 +4,16 @@ import {getUsers} from "../../redux/actions/getUsers";
 import UserCard from "../UserCard/UserCard";
 
 
-const Home = ({currentUser}) => {
+
+const Home = ({currentUser, logged}) => {
     const users = useSelector(state => state.users)
     const dispatch = useDispatch()
 
+
     useEffect(() => {
         dispatch(getUsers())
-    }, [dispatch, users])
+    }, [dispatch, logged])
+
 
     return (
         <div className={"home-wrapper"}>
@@ -18,7 +21,7 @@ const Home = ({currentUser}) => {
                 <div className={"home-users"}>
                     {
                         users.length ? users.map((user) => {
-                            return <UserCard user={user} key={user.uid} currentUser={currentUser}/>
+                            return <UserCard user={user} key={user && user.uid} currentUser={currentUser}/>
                         }) : null
                     }
                 </div>
