@@ -21,6 +21,15 @@ const Login = ({user}) => {
         }
     },[navigate, user])
 
+
+    const handleUserEmail = (e)=>{
+        setEmail(e.target.value)
+    }
+
+    const handleUserPassword = (e)=>{
+        setPassword(e.target.value)
+    }
+
     const login = async (e)=>{
         e.preventDefault()
         if (auth){
@@ -45,8 +54,8 @@ const Login = ({user}) => {
                 error ? <p className={"error"}>{error}</p> : null
             }
             <form>
-                <Input onChange={setEmail} name={"email"} type={"email"} callBack={null} id={"auth-email"} placeholder={"E-mail"}/>
-                <Input onChange={setPassword} name={"password"} type={"password"} callBack={null} id={"auth-password"} placeholder={"Password"}/>
+                <Input onChange={handleUserEmail} name={"email"} type={"email"} callBack={null} id={"auth-email"} placeholder={"E-mail"}/>
+                <Input onChange={handleUserPassword} name={"password"} type={"password"} callBack={null} id={"auth-password"} placeholder={"Password"}/>
                 <div className={"buttons-wrapper"}>
                     <Button callBack={login} className={"button-primary"} text={"Login"} type={"submit"}/>
                     <Link to={"/register"}>Register</Link>

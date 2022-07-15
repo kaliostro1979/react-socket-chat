@@ -29,10 +29,12 @@ io.on('connection', (socket) => {
         socket.to(data.room).emit("receive_message", data)
     })
 
-    socket.on('typing', function(data){
-        socket.broadcast.emit('typing', {userName: data.userName});
-        socket.to(data.room).emit("typing", data)
-        console.log(data);
+    socket.on('start_chat', function(data){
+        socket.to(data.room).emit("receive_typing", data)
+    });
+
+    socket.on('end_chat', function(data){
+        socket.to(data.room).emit("stop_typing", data)
     });
 
     socket.on('disconnect', () => {

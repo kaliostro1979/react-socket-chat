@@ -15,6 +15,10 @@ const Main = ({socket, room, setRoom, user}) => {
         }
     }
 
+    const handleRoom = (e)=>{
+        setRoom(e.target.value)
+    }
+
    useEffect(()=>{
        if (user){
            return navigate(`/start-chat/${user.uid}`);
@@ -28,7 +32,7 @@ const Main = ({socket, room, setRoom, user}) => {
             <div className={'chat-main__wrapper wrapper'}>
                 <Title title={"Create room"} className={'chat__title'}/>
                 <Input value={user ? user.displayName : ""} onChange={null} callBack={null} type={"text"} name={"user_name"} id={"chat-username"} disabled={true} className={"room-user-name"}/>
-                <Input value={room} onChange={setRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"} disabled={false} placeholder={"Enter Room ID"}/>
+                <Input value={room} onChange={handleRoom} callBack={null} type={"text"} name={"room"} id={"chat-room"} disabled={false} placeholder={"Enter Room ID"}/>
                 <div className={"buttons-wrapper"}>
                     <Button className={"button-ternary"} text={"Join"} callBack={joinRoom}/>
                 </div>

@@ -26,13 +26,13 @@ const Header = ({currentUser, setRoom}) => {
         navigate("/")
     }
 
-    useEffect(()=>{
+   /* useEffect(()=>{
         if (!currentUser){
             setLoading(true)
         }else {
             setLoading(false)
         }
-    }, [currentUser])
+    }, [currentUser])*/
 
     return (
         <header>

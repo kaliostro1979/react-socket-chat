@@ -29,6 +29,7 @@
 .chat-main {
 
   .body-wrapper {
+    position: relative;
     border: 1px solid blue;
     border-radius: 4px;
     width: 100%;
@@ -44,6 +45,17 @@
   .footer {
     width: 100%;
   }
+}
+
+.typing-label {
+  position: absolute;
+  bottom: 10px;
+  right: 25px;
+  background-color: lightgray;
+  color: gray;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
 .cloud-wrapper {
