@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled, className}) => {
+const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled, className, isTyping}) => {
 
     return (
         <input
@@ -9,7 +9,7 @@ const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled
             className={className ? className : ""}
             id={id}
             onChange={(e) => type === "file" ? onChange(e.target.files[0]) : onChange(e.target.value)}
-            onKeyDown={callBack ? (e)=> e.key === 'Enter' && callBack() : null}
+            onKeyDown={callBack ? (e)=> e.key === 'Enter' && callBack() : ()=>isTyping()}
             value={value}
             placeholder={placeholder}
             disabled={disabled}

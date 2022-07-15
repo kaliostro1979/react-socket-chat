@@ -35,6 +35,14 @@ const Chat = ({socket, room, user, setRoom}) => {
 
     }
 
+    const notifyIfUserTyping = ()=>{
+        if (message !== ""){
+            socket.emit('is_typing', 'user is chatting')
+        }else {
+            socket.emit('is_typing', 'user is not chatting')
+        }
+    }
+
     const exitRoom = ()=>{
         navigate(`/start-chat/${user.uid}`)
         setRoom("")
@@ -44,6 +52,7 @@ const Chat = ({socket, room, user, setRoom}) => {
         socket.on("receive_message", (data) => {
             setMessageList((prev) => [...prev, data])
         })
+
     }, [socket]);
 
     return (
@@ -77,6 +86,7 @@ const Chat = ({socket, room, user, setRoom}) => {
                     onChange={setMessage}
                     value={message}
                     type={"text"}
+                    isTyping={notifyIfUserTyping}
                 />
                 <div className={"buttons-wrapper"}>
                     <Button className={"button-secondary"} text={"Send"} callBack={sendMessage}/>
