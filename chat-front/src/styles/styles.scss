@@ -1,3 +1,4 @@
+@import "global";
 @import "main";
 @import "chat/chat";
 @import "fonts";
@@ -6,3 +7,6 @@
 @import "user-card/user-card";
 @import "preloader/preloader";
 @import "auth/registration";
+@import "user/user";
+@import "user/user-sidebar";
+@import "user/user-content";

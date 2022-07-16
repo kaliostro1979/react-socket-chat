@@ -1,0 +1,16 @@
+.global-wrapper {
+  display: flex;
+  gap: 80px;
+  align-items: flex-start;
+  padding-top: 80px;
+}
+
+.global-left {
+  flex-basis: 30%;
+  max-width: 30%;
+}
+
+.global-right {
+  flex-basis: 70%;
+  max-width: 70%;
+}

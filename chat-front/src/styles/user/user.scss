@@ -1,0 +1,16 @@
+.user-main {
+  display: flex;
+  width: 100%;
+  gap: 50px;
+}
+
+.user-sidebar {
+  flex-basis: 30%;
+  max-width: 30%;
+  border-right: 1px solid lightgray;
+}
+
+.user-content {
+  flex-basis: 70%;
+  max-width: 70%;
+}

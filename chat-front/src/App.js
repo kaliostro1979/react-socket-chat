@@ -12,6 +12,11 @@ import Header from "./components/Header/Header";
 import { collection, onSnapshot } from "firebase/firestore";
 import {useDispatch, useSelector} from "react-redux";
 import {getUsers} from "./redux/actions/getUsers";
+import Sidebar from "./components/Sidebar/Sidebar";
+import UserPost from "./components/User/UserPost";
+import UserContent from "./components/User/UserContent";
+import UserEditProfile from "./components/User/UserEditProfile";
+import User from "./components/User/User";
 
 
 function App() {
@@ -55,17 +60,31 @@ function App() {
                 <main>
                     <Header currentUser={currentUser && currentUser} setRoom={setRoom}/>
                     <div className="container">
-                        <Routes>
-                            <Route path={"/"} element={<Home currentUser={currentUser && currentUser} logged={logged}/>}/>
-                            <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser &&currentUser}/>}>
-                                <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser && currentUser}/>}/>
-                            </Route>
-                            <Route path={"/chat"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser && currentUser} setRoom={setRoom}/>}>
-                                <Route path={":uid"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser && currentUser} setRoom={setRoom}/>}/>
-                            </Route>
-                            <Route path={"/login"} element={<Login user={currentUser && currentUser} socket={socket}/>}/>
-                            <Route path={"/register"} element={<Register user={currentUser && currentUser}/>}/>
-                        </Routes>
+                        <div className={"global-wrapper"}>
+                            <div className={"global-left"}>
+                                <Sidebar users={users} currentUser={currentUser}/>
+                            </div>
+                            <div className={"global-right"}>
+                                <Routes>
+                                    <Route path={"/"} element={<Home currentUser={currentUser && currentUser} logged={logged}/>}/>
+                                    <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser &&currentUser}/>}>
+                                        <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser && currentUser}/>}/>
+                                    </Route>
+                                    <Route path={"/chat"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser && currentUser} setRoom={setRoom}/>}>
+                                        <Route path={":uid"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser && currentUser} setRoom={setRoom}/>}/>
+                                    </Route>
+                                    <Route path={"/login"} element={<Login user={currentUser && currentUser} socket={socket}/>}/>
+                                    <Route path={"/register"} element={<Register user={currentUser && currentUser}/>}/>
+                                    <Route path={"/user"} element={<User user={currentUser && currentUser}/>}>
+                                        <Route path={":userId"} element={<UserContent/>}>
+                                            <Route index element={<UserEditProfile/>}/>
+                                            <Route path={"edit-profile"} element={<UserEditProfile/>}/>
+                                            <Route path={"publish-post"} element={<UserPost/>} exact/>
+                                        </Route>
+                                    </Route>
+                                </Routes>
+                            </div>
+                        </div>
                     </div>
                 </main>
             </div>

@@ -1,0 +1,15 @@
+.user-sidebar {
+  ul {
+    li {
+      margin-bottom: 15px;
+
+      a {
+        font-size: 18px;
+        font-weight: 700;
+         &.active {
+           text-decoration: underline;
+         }
+      }
+    }
+  }
+}

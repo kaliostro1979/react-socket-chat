@@ -37,9 +37,11 @@ const Header = ({currentUser, setRoom}) => {
                             currentUser ?
                                 <div className={"home-buttons__inner"}>
 
-                                    <div className={"home-current-user"}>
-                                        {currentUser.displayName}
-                                    </div>
+                                    <Link to={`/user/${currentUser.uid}/edit-profile`}>
+                                        <div className={"home-current-user"}>
+                                            {currentUser.displayName}
+                                        </div>
+                                    </Link>
                                     <Link to={`/chat/${currentUser.uid}`}>
                                         <div className={"home-current-user"}>
                                             <span>Enter your room</span>
