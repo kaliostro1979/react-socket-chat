@@ -19,15 +19,14 @@ function App() {
     const [currentUser, setCurrentUser] = useState(null)
     const [logged, setLogged] = useState(false)
 
-
     useEffect(()=>{
         auth.onAuthStateChanged((user)=>{
-            setCurrentUser(user && user)
+            setCurrentUser(user)
         })
     }, [])
 
     useMemo(()=>{
-        onSnapshot(collection(db, "users"), (snapshot)=>{
+        onSnapshot(collection(db, "users"),  (snapshot)=>{
             setLogged(snapshot)
         })
     }, [])
@@ -35,16 +34,16 @@ function App() {
     return (
         <BrowserRouter>
             <div className="App">
-                <Header currentUser={currentUser} setRoom={setRoom}/>
+                <Header currentUser={currentUser && currentUser} setRoom={setRoom}/>
                 <div className="container">
                     <Routes>
-                        <Route path={"/"} element={<Home currentUser={currentUser} logged={logged}/>}/>
-                        <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser}/>}>
-                            <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser}/>}/>
+                        <Route path={"/"} element={<Home currentUser={currentUser && currentUser} logged={logged}/>}/>
+                        <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser &&currentUser}/>}>
+                            <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser && currentUser}/>}/>
                         </Route>
-                        <Route path={"/chat"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser} setRoom={setRoom}/>}/>
-                        <Route path={"/login"} element={<Login user={currentUser}/>}/>
-                        <Route path={"/register"} element={<Register user={currentUser}/>}/>
+                        <Route path={"/chat"} element={<Chat room={room} socket={socket} userName={userName} user={currentUser && currentUser} setRoom={setRoom}/>}/>
+                        <Route path={"/login"} element={<Login user={currentUser && currentUser}/>}/>
+                        <Route path={"/register"} element={<Register user={currentUser && currentUser}/>}/>
                     </Routes>
                 </div>
             </div>

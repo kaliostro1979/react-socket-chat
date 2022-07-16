@@ -68,8 +68,14 @@ const Chat = ({socket, room, user, setRoom}) => {
     }
 
     const handleOnBlur = (e)=>{
-        setTyping(false)
-        setTypingUser(null)
+        if (message.length <= 1){
+            socket.emit('end_chat', {
+                userId: user.uid,
+                userName: user.displayName,
+                room: room,
+                typing: false
+            })
+        }
     }
 
     useEffect(()=>{
