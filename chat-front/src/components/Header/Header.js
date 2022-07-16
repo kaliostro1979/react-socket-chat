@@ -37,9 +37,12 @@ const Header = ({currentUser, setRoom}) => {
                             currentUser ?
                                 <div className={"home-buttons__inner"}>
 
+                                    <div className={"home-current-user"}>
+                                        {currentUser.displayName}
+                                    </div>
                                     <Link to={`/chat/${currentUser.uid}`}>
                                         <div className={"home-current-user"}>
-                                            {currentUser.displayName}
+                                            <span>Enter your room</span>
                                         </div>
                                     </Link>
                                     <Button className={"button-secondary"} text={"Logout"} callBack={handleSignOut}/>
