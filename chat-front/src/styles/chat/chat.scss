@@ -1,7 +1,7 @@
 .wrapper {
   width: 500px;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: calc(100vh - 83px);
   display: flex;
   flex-direction: column;
   justify-content: center;

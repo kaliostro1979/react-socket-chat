@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom'
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import ChatCloud from "./ChatCloud";
 import Title from "../UI/Title";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 
 const Chat = ({socket, room, user, setRoom}) => {
@@ -14,14 +14,23 @@ const Chat = ({socket, room, user, setRoom}) => {
     const [typing, setTyping] = useState(false)
     const [typingUser, setTypingUser] = useState(null)
 
+    const params = useParams()
+
+    const joinRoom = useCallback(()=>{
+        if (user) {
+            socket.emit("join_room", params.uid)
+            navigate(`/chat/${params.uid}`)
+        }
+    }, [navigate, params.uid, socket, user])
+
     const sendMessage = async () => {
         if (message !== "") {
             const messageData = {
                 author: user && user.displayName,
-                room: room,
                 message: message,
                 date: new Date(Date.now()).getHours().toString().padStart(2, '0') + ":" + new Date(Date.now()).getMinutes().toString().padStart(2, '0'),
-                typing: false
+                typing: false,
+                room: params.uid
             }
 
             await socket.emit("send_message", messageData)
@@ -47,7 +56,7 @@ const Chat = ({socket, room, user, setRoom}) => {
             socket.emit('start_chat', {
                 userId: user.uid,
                 userName: user.displayName,
-                room: room,
+                room: params.uid,
                 typing: true
             })
         }
@@ -56,14 +65,14 @@ const Chat = ({socket, room, user, setRoom}) => {
             socket.emit('end_chat', {
                 userId: user.uid,
                 userName: user.displayName,
-                room: room,
+                room: params.uid,
                 typing: false
             })
         }
     }
 
     const exitRoom = ()=>{
-        navigate(`/start-chat/${user.uid}`)
+        navigate(`/`)
         setRoom("")
     }
 
@@ -72,7 +81,7 @@ const Chat = ({socket, room, user, setRoom}) => {
             socket.emit('end_chat', {
                 userId: user.uid,
                 userName: user.displayName,
-                room: room,
+                room: user.uid,
                 typing: false
             })
         }
@@ -85,6 +94,7 @@ const Chat = ({socket, room, user, setRoom}) => {
     },[navigate, user])
 
     useEffect(() => {
+        joinRoom()
         socket.on("receive_message", (data) => {
             setMessageList((prev) => [...prev, data])
             setTyping(false)
@@ -100,12 +110,12 @@ const Chat = ({socket, room, user, setRoom}) => {
             setTypingUser(data.userName)
         })
 
-    }, [socket]);
+    }, [socket, joinRoom]);
 
     return (
         <div className={"chat-main wrapper"}>
             <div className={"header"}>
-                <Title title={`Logged in as ${user && user.displayName} in Room N ${room}`} className={'chat__title'}/>
+                <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`} className={'chat__title'}/>
             </div>
             <div className={"body-wrapper"}>
                 <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>

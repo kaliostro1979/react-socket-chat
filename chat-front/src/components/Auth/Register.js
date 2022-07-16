@@ -7,6 +7,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
 import {doc, setDoc, writeBatch} from "firebase/firestore";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import AvatarIcon from "../../icons/avatar-icon";
 
 
 const Register = ({user}) => {
@@ -75,7 +76,7 @@ const Register = ({user}) => {
                         }).then(() => {
                             const userRef = doc(db, 'users', user.uid);
                             setDoc(userRef, JSON.parse(JSON.stringify(user))).then(() => {
-                                setDoc(userRef, {loggedIn: true}, {merge: true}).then();
+                                setDoc(userRef, {loggedIn: true, room: user.uid}, {merge: true}).then();
                             });
                             navigate("/start-chat")
                         }).catch((error) => {
@@ -106,8 +107,14 @@ const Register = ({user}) => {
                        placeholder={"Password"}/>
                 <Input onChange={handleInput} name={"rpt-password"} type={"password"} callBack={null}
                        id={"auth-repeat-password"} placeholder={"Repeat password"}/>
-                <Input type={"file"} name={"avatar"} placeholder={"choose your avatar"} id={"user-avatar"}
-                       onChange={setAvatar}/>
+                <label htmlFor="user-avatar" className={"input input-label"}>
+                    <div className={"label-icon"}>
+                        <AvatarIcon/>
+                        {!avatar ? <p>Please choose your avatar (optional)</p> : <p>{avatar.name}</p>}
+                    </div>
+                    <Input type={"file"} name={"avatar"} placeholder={"choose your avatar"} id={"user-avatar"}
+                           onChange={setAvatar}/>
+                </label>
                 <div className={"buttons-wrapper"}>
                     <Button callBack={register} className={"button-primary"} text={"Register"} type={"submit"}/>
                     <Link to={"/login"}>Log in</Link>

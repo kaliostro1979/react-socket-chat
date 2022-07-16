@@ -19,7 +19,7 @@ const Header = ({currentUser, setRoom}) => {
     async function changeLoggedInStatus() {
         const batch = writeBatch(db);
         const userRef = doc(db, 'users', currentUser.uid);
-        batch.update(userRef, {loggedIn: false});
+        batch.update(userRef, {loggedIn: false, room: currentUser.uid});
         await batch.commit();
         setRoom("")
         navigate("/")
@@ -37,7 +37,7 @@ const Header = ({currentUser, setRoom}) => {
                             currentUser ?
                                 <div className={"home-buttons__inner"}>
 
-                                    <Link to={`/start-chat/${currentUser.uid}`}>
+                                    <Link to={`/chat/${currentUser.uid}`}>
                                         <div className={"home-current-user"}>
                                             {currentUser.displayName}
                                         </div>
