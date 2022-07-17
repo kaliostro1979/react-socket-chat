@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled, className, onBlur, onFocus}) => {
+const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled, className, onBlur, onFocus, required}) => {
 
     return (
         <input
@@ -16,6 +16,7 @@ const Input = ({value, onChange, callBack, type, id, name, placeholder, disabled
             autoComplete={"off"}
             onBlur={onBlur && onBlur}
             onFocus={onFocus && onFocus}
+            required={required}
         />
     );
 };

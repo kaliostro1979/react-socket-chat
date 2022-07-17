@@ -9,6 +9,7 @@ const UserSidebar = ({user}) => {
             <ul>
                 <li><NavLink to={`${user && user.uid}/edit-profile`} className={(navData) => (navData.isActive ? 'active' : '')}>Edit profile</NavLink></li>
                 <li><NavLink to={`${user && user.uid}/publish-post`} className={(navData) => (navData.isActive ? 'active' : '')}>Publish Post</NavLink></li>
+                <li><NavLink to={`${user && user.uid}/posts-list`} className={(navData) => (navData.isActive ? 'active' : '')}>My posts</NavLink></li>
             </ul>
         </div>
     );

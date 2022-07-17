@@ -16,7 +16,7 @@ const Chat = ({socket, room, user, setRoom}) => {
 
     const params = useParams()
 
-    const joinRoom = useCallback(()=>{
+    const joinRoom = useCallback(() => {
         if (user) {
             socket.emit("join_room", params.uid)
             navigate(`/chat/${params.uid}`)
@@ -42,17 +42,17 @@ const Chat = ({socket, room, user, setRoom}) => {
         }
     }
 
-    const handleKeyDown = (e)=>{
-        if (e.key === 'Enter'){
-            sendMessage().then(()=>setTyping(false))
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendMessage().then(() => setTyping(false))
         }
 
     }
 
-    const handleInputMessage =(e)=>{
+    const handleInputMessage = (e) => {
         setMessage(e.target.value)
 
-        if (message !== "" || message.length > 1){
+        if (message !== "" || message.length > 1) {
             socket.emit('start_chat', {
                 userId: user.uid,
                 userName: user.displayName,
@@ -61,7 +61,7 @@ const Chat = ({socket, room, user, setRoom}) => {
             })
         }
 
-        if (message.length <= 1){
+        if (message.length <= 1) {
             socket.emit('end_chat', {
                 userId: user.uid,
                 userName: user.displayName,
@@ -71,13 +71,13 @@ const Chat = ({socket, room, user, setRoom}) => {
         }
     }
 
-    const exitRoom = ()=>{
+    const exitRoom = () => {
         navigate(`/`)
         setRoom("")
     }
 
-    const handleOnBlur = (e)=>{
-        if (message.length <= 1){
+    const handleOnBlur = (e) => {
+        if (message.length <= 1) {
             socket.emit('end_chat', {
                 userId: user.uid,
                 userName: user.displayName,
@@ -87,11 +87,11 @@ const Chat = ({socket, room, user, setRoom}) => {
         }
     }
 
-    useEffect(()=>{
-        if (!user){
+    useEffect(() => {
+        if (!user) {
             return navigate("/login");
         }
-    },[navigate, user])
+    }, [navigate, user])
 
     useEffect(() => {
         joinRoom()
@@ -100,12 +100,12 @@ const Chat = ({socket, room, user, setRoom}) => {
             setTyping(false)
         })
 
-        socket.on('receive_typing', (data)=>{
+        socket.on('receive_typing', (data) => {
             setTyping(data.typing)
             setTypingUser(data.userName)
         })
 
-        socket.on('stop_typing', (data)=>{
+        socket.on('stop_typing', (data) => {
             setTyping(data.typing)
             setTypingUser(data.userName)
         })
@@ -115,7 +115,8 @@ const Chat = ({socket, room, user, setRoom}) => {
     return (
         <div className={"chat-main wrapper"}>
             <div className={"header"}>
-                <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`} className={'chat__title'}/>
+                <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`}
+                       className={'chat__title'}/>
             </div>
             <div className={"body-wrapper"}>
                 <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>
@@ -137,7 +138,13 @@ const Chat = ({socket, room, user, setRoom}) => {
                     </div>
                 </ScrollToBottom>
                 {
-                    typing ? <div className={"typing-label"}><p>{typingUser} typing...</p></div> : null
+                    typing ? <div className={"typing-label"}>
+                        <p>{typingUser} typing
+                            <span className={"label__dot"}></span>
+                            <span className={"label__dot"}></span>
+                            <span className={"label__dot"}></span>
+                        </p>
+                    </div> : null
                 }
             </div>
             <div className={"footer"}>

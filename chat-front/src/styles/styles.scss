@@ -1,12 +1,26 @@
+//Global styles and Global components
 @import "global";
 @import "main";
 @import "chat/chat";
 @import "fonts";
-@import "chat/start-chat";
-@import "home/home";
-@import "user-card/user-card";
 @import "preloader/preloader";
+
+//Chat
+@import "chat/start-chat";
+
+//Home
+@import "home/home";
+
+//Auth
 @import "auth/registration";
+
+//User
 @import "user/user";
 @import "user/user-sidebar";
 @import "user/user-content";
+@import "user/user-card/user-card";
+
+//Post
+@import "post/posts";
+@import "post/post-card";
+@import "post/single-post";

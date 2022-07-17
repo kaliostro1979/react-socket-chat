@@ -17,6 +17,9 @@ import UserPost from "./components/User/UserPost";
 import UserContent from "./components/User/UserContent";
 import UserEditProfile from "./components/User/UserEditProfile";
 import User from "./components/User/User";
+import UserPostsList from "./components/User/UserPostsList";
+import SinglePost from "./components/Posts/SinglePost";
+import {getPosts} from "./redux/actions/getPosts";
 
 
 function App() {
@@ -25,6 +28,7 @@ function App() {
     const [room, setRoom] = useState("")
     const [currentUser, setCurrentUser] = useState(null)
     const [logged, setLogged] = useState(false)
+    const posts = useSelector(state => state.posts)
 
     const users = useSelector(state => state.users)
     const dispatch = useDispatch()
@@ -32,6 +36,7 @@ function App() {
 
     useEffect(() => {
         dispatch(getUsers())
+        dispatch(getPosts())
     }, [dispatch, logged])
 
     useEffect(()=>{
@@ -66,7 +71,7 @@ function App() {
                             </div>
                             <div className={"global-right"}>
                                 <Routes>
-                                    <Route path={"/"} element={<Home currentUser={currentUser && currentUser} logged={logged}/>}/>
+                                    <Route path={"/"} element={<Home currentUser={currentUser && currentUser} logged={logged} posts={posts}/>}/>
                                     <Route path={"/start-chat"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser &&currentUser}/>}>
                                         <Route path={":id"} element={<Main socket={socket} userName={userName} setUserName={setUserName} room={room} setRoom={setRoom} user={currentUser && currentUser}/>}/>
                                     </Route>
@@ -79,8 +84,13 @@ function App() {
                                         <Route path={":userId"} element={<UserContent/>}>
                                             <Route index element={<UserEditProfile/>}/>
                                             <Route path={"edit-profile"} element={<UserEditProfile/>}/>
-                                            <Route path={"publish-post"} element={<UserPost/>} exact/>
+                                            <Route path={"publish-post"} element={<UserPost socket={socket} user={currentUser && currentUser}/>} exact/>
+                                            <Route path={"posts-list"} element={<UserPostsList socket={socket} user={currentUser && currentUser}/>} exact/>
                                         </Route>
+                                    </Route>
+                                    <Route path={"posts-list"} element={<UserPostsList socket={socket} user={currentUser && currentUser}/>} exact/>
+                                    <Route path={"/post"}>
+                                        <Route path={":id"} element={<SinglePost user={currentUser && currentUser} posts={posts}/>}/>
                                     </Route>
                                 </Routes>
                             </div>

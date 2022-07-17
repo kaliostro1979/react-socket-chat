@@ -6,6 +6,7 @@
 
 body {
   font-family: "Archivo", sans-serif;
+  background-color: #edebeb;
 }
 
 ul {
@@ -58,8 +59,8 @@ input, .input {
 }
 
 textarea {
-  min-width: 500px;
-  max-width: 500px;
+  min-width: 100%;
+  max-width: 100%;
   min-height: 50px;
   max-height: 50px;
   border: 1px solid green;
