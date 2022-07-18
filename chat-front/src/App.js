@@ -90,7 +90,7 @@ function App() {
                                     </Route>
                                     <Route path={"posts-list"} element={<UserPostsList socket={socket} user={currentUser && currentUser}/>} exact/>
                                     <Route path={"/post"}>
-                                        <Route path={":id"} element={<SinglePost user={currentUser && currentUser} posts={posts}/>}/>
+                                        <Route path={":id"} element={<SinglePost user={currentUser && currentUser}/>}/>
                                     </Route>
                                 </Routes>
                             </div>

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getSinglePost} from "../../redux/actions/getPosts";
 
-const SinglePost = ({posts}) => {
+const SinglePost = () => {
     const params = useParams()
-    const [post] = posts.filter(p=>p.post_id === params.id)
+    const dispatch = useDispatch()
+    const post = useSelector(state => state.post)
 
+    useEffect(()=>{
+        dispatch(getSinglePost(params.id))
+    }, [dispatch, params.id])
 
     return (
         <div className={"single-post__wrapper"}>
