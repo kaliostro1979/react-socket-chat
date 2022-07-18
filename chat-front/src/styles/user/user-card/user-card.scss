@@ -7,7 +7,7 @@
   min-width: 300px;
   background-color: #f2f4f5;
 
-  &:before {
+  /*&:before {
     content: "";
     position: absolute;
     top: 50%;
@@ -17,16 +17,33 @@
     height: 10px;
     background-color: red;
     border-radius: 50%;
+  }*/
+
+  .user-status {
+    color: red;
   }
 
   &.current-user {
     background-color: lightblue;
     color: white;
 
-    &:before {
+    /*&:before {
       background-color: green;
+    }*/
+
+    .user-status {
+      color: green;
     }
   }
+}
+
+
+
+.user-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .user-username{
@@ -37,6 +54,7 @@
 .user-avatar{
   position: relative;
   width: 50px;
+  min-width: 50px;
   padding-top: 50px;
   border-radius: 50%;
   overflow: hidden;
