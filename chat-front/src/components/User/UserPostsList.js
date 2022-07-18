@@ -7,7 +7,7 @@ const UserPostsList = ({user}) => {
             {
                 user ? user.posts.map((post)=>{
                     return (
-                        <PostCard post={post} key={post.post_id}/>
+                        <PostCard post={post} key={post.post_id} willRemoved={true} user={user}/>
                     )
                 }) : null
             }

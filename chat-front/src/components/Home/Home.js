@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {getUsers} from "../../redux/actions/getUsers";
 import Preloader from "../Preloader/Preloader";
-import {getPosts} from "../../redux/actions/getPosts";
 import Posts from "../Posts/Posts";
 
 
@@ -29,7 +28,7 @@ const Home = ({currentUser, logged, posts}) => {
                 loading ? <Preloader/> :
                     <div className={"home-wrapper"}>
                         {
-                            posts.length ? <Posts posts={posts}/> : null
+                            posts.length ? <Posts posts={posts} user={currentUser}/> : null
                         }
                     </div>
             }
