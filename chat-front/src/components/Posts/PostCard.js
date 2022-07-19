@@ -5,12 +5,13 @@ import Preloader from "../Preloader/Preloader";
 import {doc, getDoc, writeBatch, deleteDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
 
-const PostCard = ({post, willRemoved, user}) => {
+
+const PostCard = ({post, willRemoved, userId}) => {
 
     const handleRemovePost = async (e, id)=>{
         await deleteDoc(doc(db, "posts", id));
 
-        const userRef = doc(db, 'users', user.uid)
+        const userRef = doc(db, 'users', userId)
         const docSnap = await getDoc(userRef);
         if (docSnap.exists()) {
             const posts = docSnap.data().posts
@@ -19,7 +20,6 @@ const PostCard = ({post, willRemoved, user}) => {
             batch.update(userRef, JSON.parse(JSON.stringify({posts: posts.filter(post=>post.post_id !== id)})));
             batch.commit().then();
         }
-
     }
 
     return (
@@ -29,7 +29,7 @@ const PostCard = ({post, willRemoved, user}) => {
                     <CloseIcon/>
                 </div> : null
             }
-            <Link to={`post/${post.post_id}`}>
+            <Link to={`/post/${post.post_id}`} target={"_blank"}>
                 {
                     post.title && post.text ? <div className={"post-card__wrapper"}>
                         <div className={"post-card__image-wrapper"}>

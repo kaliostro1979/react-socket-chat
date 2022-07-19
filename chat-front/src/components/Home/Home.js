@@ -1,38 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {getUsers} from "../../redux/actions/getUsers";
-import Preloader from "../Preloader/Preloader";
 import Posts from "../Posts/Posts";
+import {getPosts} from "../../redux/actions/getPosts";
+import {collection, onSnapshot} from "firebase/firestore";
+import {db} from "../../firebase/firebase";
 
 
-const Home = ({currentUser, logged, posts}) => {
-    const [loading, setLoading] = useState(false)
-    const users = useSelector(state => state.users)
+const Home = ({currentUser}) => {
     const dispatch = useDispatch()
+    const posts = useSelector(state => state.posts)
 
-    useEffect(() => {
-        dispatch(getUsers())
-    }, [dispatch, logged])
-
-    useEffect(() => {
-        if (users.length) {
-            setLoading(false)
-        } else {
-            setLoading(true)
-        }
-    }, [users.length])
+    useEffect(()=>{
+        onSnapshot(collection(db, "posts"), (snapshot) => {
+            dispatch(getPosts())
+        });
+    },[dispatch])
 
     return (
-        <>
+        <div className={"home-wrapper"}>
             {
-                loading ? <Preloader/> :
-                    <div className={"home-wrapper"}>
-                        {
-                            posts.length ? <Posts posts={posts} user={currentUser}/> : null
-                        }
-                    </div>
+                posts.length ? <Posts user={currentUser} posts={posts}/> : null
             }
-        </>
+        </div>
     );
 };
 

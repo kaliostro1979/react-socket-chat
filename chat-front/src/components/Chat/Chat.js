@@ -5,15 +5,22 @@ import Input from "../UI/Input";
 import ChatCloud from "./ChatCloud";
 import Title from "../UI/Title";
 import {useNavigate, useParams} from "react-router-dom";
+import {doc, setDoc} from "firebase/firestore";
+import {db} from "../../firebase/firebase";
+import {useDispatch, useSelector} from "react-redux";
+import {getMessages} from "../../redux/actions/getMessages";
+import Preloader from "../Preloader/Preloader";
 
 
-const Chat = ({socket, room, user, setRoom}) => {
+const Chat = ({socket, user, setRoom}) => {
+    const dispatch = useDispatch()
+    const messages = useSelector(state => state.messages)
+
     const [message, setMessage] = useState("")
-    const [messageList, setMessageList] = useState([])
+    const [messageList, setMessageList] = useState(messages)
     const navigate = useNavigate()
     const [typing, setTyping] = useState(false)
     const [typingUser, setTypingUser] = useState(null)
-
     const params = useParams()
 
     const joinRoom = useCallback(() => {
@@ -25,6 +32,7 @@ const Chat = ({socket, room, user, setRoom}) => {
 
     const sendMessage = async () => {
         if (message !== "") {
+
             const messageData = {
                 author: user && user.displayName,
                 message: message,
@@ -34,8 +42,11 @@ const Chat = ({socket, room, user, setRoom}) => {
             }
 
             await socket.emit("send_message", messageData)
-
             setMessageList((prev) => [...prev, messageData])
+
+            const messageRef = doc(db, 'messages', params.uid);
+            await setDoc(messageRef, {messages: [...messageList, messageData]}, {merge: true});
+
             setMessage("")
             setTyping(false)
             setTypingUser(null)
@@ -95,6 +106,9 @@ const Chat = ({socket, room, user, setRoom}) => {
 
     useEffect(() => {
         joinRoom()
+    }, [joinRoom]);
+
+    useEffect(() => {
         socket.on("receive_message", (data) => {
             setMessageList((prev) => [...prev, data])
             setTyping(false)
@@ -110,57 +124,66 @@ const Chat = ({socket, room, user, setRoom}) => {
             setTypingUser(data.userName)
         })
 
-    }, [socket, joinRoom]);
+    }, [socket])
+
+    useEffect(() => {
+        dispatch(getMessages(params.uid))
+    }, [dispatch, params.uid, messageList])
+
 
     return (
-        <div className={"chat-main wrapper"}>
-            <div className={"header"}>
-                <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`}
-                       className={'chat__title'}/>
-            </div>
-            <div className={"body-wrapper"}>
-                <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>
-                    <div className={"body"}>
+        <>
+            {
+                !user ? <Preloader/> : <div className={"chat-main wrapper"}>
+                    <div className={"header"}>
+                        <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`}
+                               className={'chat__title'}/>
+                    </div>
+                    <div className={"body-wrapper"}>
+                        <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>
+                            <div className={"body"}>
+                                {
+                                    messageList.length ? messages.map((item, i) => {
+                                        return (
+                                            <ChatCloud
+                                                author={item.author}
+                                                message={item.message}
+                                                name={user && user.displayName}
+                                                date={item.date}
+                                                itemAuthor={item.author}
+                                                key={i}
+                                            />
+                                        )
+                                    }) : null
+                                }
+                            </div>
+                        </ScrollToBottom>
                         {
-                            messageList.length ? messageList.map((item, i) => {
-                                return (
-                                    <ChatCloud
-                                        author={item.author}
-                                        message={item.message}
-                                        name={user && user.displayName}
-                                        date={item.date}
-                                        itemAuthor={item.author}
-                                        key={i}
-                                    />
-                                )
-                            }) : null
+                            typing ? <div className={"typing-label"}>
+                                <p>{typingUser} typing
+                                    <span className={"label__dot"}></span>
+                                    <span className={"label__dot"}></span>
+                                    <span className={"label__dot"}></span>
+                                </p>
+                            </div> : null
                         }
                     </div>
-                </ScrollToBottom>
-                {
-                    typing ? <div className={"typing-label"}>
-                        <p>{typingUser} typing
-                            <span className={"label__dot"}></span>
-                            <span className={"label__dot"}></span>
-                            <span className={"label__dot"}></span>
-                        </p>
-                    </div> : null
-                }
-            </div>
-            <div className={"footer"}>
-                <Input
-                    callBack={handleKeyDown}
-                    onChange={handleInputMessage}
-                    value={message}
-                    type={"text"}
-                    onBlur={handleOnBlur}
-                />
-                <div className={"buttons-wrapper"}>
-                    <Button className={"button-secondary"} text={"Send"} callBack={sendMessage}/>
-                    <Button className={"button-primary"} text={"Exit room"} callBack={exitRoom}/>
+                    <div className={"footer"}>
+                        <Input
+                            callBack={handleKeyDown}
+                            onChange={handleInputMessage}
+                            value={message}
+                            type={"text"}
+                            onBlur={handleOnBlur}
+                        />
+                        <div className={"buttons-wrapper"}>
+                            <Button className={"button-secondary"} text={"Send"} callBack={sendMessage}/>
+                            <Button className={"button-primary"} text={"Exit room"} callBack={exitRoom}/>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            }
+        </>
     );
 };
 

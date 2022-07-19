@@ -1,8 +1,14 @@
 import {combineReducers} from "@reduxjs/toolkit";
 import {usersReducer} from "./reducers/users";
 import {postsReducer} from "./reducers/posts";
+import {getPostReducer} from "./reducers/post";
+import {getUserPostsReducer} from "./reducers/userPosts";
+import {getMessagesReducer} from "./reducers/messages";
 
 export const rootReducer = combineReducers({
     users: usersReducer,
-    posts: postsReducer
+    posts: postsReducer,
+    post: getPostReducer,
+    userPosts: getUserPostsReducer,
+    messages: getMessagesReducer
 })

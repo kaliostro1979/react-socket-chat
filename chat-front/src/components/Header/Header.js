@@ -7,7 +7,7 @@ import {auth, db} from "../../firebase/firebase";
 import {doc, writeBatch} from "firebase/firestore";
 
 
-const Header = ({currentUser, setRoom}) => {
+const Header = ({currentUser}) => {
     const navigate = useNavigate()
 
     const handleSignOut = ()=>{
@@ -21,7 +21,6 @@ const Header = ({currentUser, setRoom}) => {
         const userRef = doc(db, 'users', currentUser.uid);
         batch.update(userRef, {loggedIn: false, room: currentUser.uid});
         await batch.commit();
-        setRoom("")
         navigate("/")
     }
 
