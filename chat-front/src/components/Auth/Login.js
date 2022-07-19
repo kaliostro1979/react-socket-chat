@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import {auth, db} from "../../firebase/firebase";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Title from "../UI/Title";
 import {doc, writeBatch} from "firebase/firestore";
 
@@ -13,22 +13,12 @@ const Login = ({user, socket}) => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const navigate = useNavigate()
-    const params = useParams()
-
-    const joinRoom = useCallback(()=>{
-        if (user) {
-            socket.emit("join_room", params.uid)
-            navigate(`/chat/${params.uid}`)
-        }
-    }, [navigate, params.uid, socket, user])
-
 
     useEffect(()=>{
         if (user){
-            joinRoom()
             return navigate("/");
         }
-    },[navigate, user, joinRoom])
+    },[navigate, user])
 
 
     const handleUserEmail = (e)=>{

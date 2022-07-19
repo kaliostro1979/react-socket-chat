@@ -12,8 +12,9 @@ import SinglePost from "../components/Posts/SinglePost";
 import io from "socket.io-client";
 
 
-const Layout = ({currentUser, logged}) => {
+const Layout = ({currentUser}) => {
     const socket = io.connect("http://localhost:3001")
+
 
     return (
         <div className={"global-right"}>

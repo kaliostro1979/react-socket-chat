@@ -14,3 +14,21 @@
   flex-basis: 70%;
   max-width: 70%;
 }
+
+
+@media (max-width: 991px) {
+  .global-wrapper {
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .global-left {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .global-right {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}

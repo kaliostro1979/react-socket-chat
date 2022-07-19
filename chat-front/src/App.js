@@ -1,34 +1,37 @@
 import React, {useEffect} from "react";
-import {useState} from "react";
 import {BrowserRouter} from "react-router-dom";
 import {auth} from "./firebase/firebase";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Layout from "./Layout/Layout";
+import {useDispatch, useSelector} from "react-redux";
+import {getCurrentUser} from "./redux/actions/getCurrentUser";
 
 
 function App() {
 
-    const [currentUser, setCurrentUser] = useState(null)
-
+    const user = useSelector(state=>state.currentUser)
+    const dispatch = useDispatch()
 
     useEffect(()=>{
         auth.onAuthStateChanged((user)=>{
-            setCurrentUser(user)
+            if (user){
+                dispatch(getCurrentUser(user.uid))
+            }
         })
-    }, [])
+    }, [dispatch])
 
     return (
         <BrowserRouter>
             <div className="App">
                 <main>
-                    <Header currentUser={currentUser && currentUser}/>
+                    <Header currentUser={Object.keys(user).length && user}/>
                     <div className="container">
                         <div className={"global-wrapper"}>
                             <div className={"global-left"}>
-                                <Sidebar currentUser={currentUser}/>
+                                <Sidebar currentUser={Object.keys(user).length && user}/>
                             </div>
-                            <Layout currentUser={currentUser}/>
+                            <Layout currentUser={Object.keys(user).length && user}/>
                         </div>
                     </div>
                 </main>

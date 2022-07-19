@@ -12,10 +12,9 @@ import {getMessages} from "../../redux/actions/getMessages";
 import Preloader from "../Preloader/Preloader";
 
 
-const Chat = ({socket, user, setRoom}) => {
+const Chat = ({socket, user}) => {
     const dispatch = useDispatch()
     const messages = useSelector(state => state.messages)
-
     const [message, setMessage] = useState("")
     const [messageList, setMessageList] = useState(messages)
     const navigate = useNavigate()
@@ -24,9 +23,9 @@ const Chat = ({socket, user, setRoom}) => {
     const params = useParams()
 
     const joinRoom = useCallback(() => {
-        if (user) {
+        if (user && params.uid === user.uid) {
             socket.emit("join_room", params.uid)
-            navigate(`/chat/${params.uid}`)
+            return navigate(`/chat/${params.uid}`)
         }
     }, [navigate, params.uid, socket, user])
 
@@ -84,7 +83,6 @@ const Chat = ({socket, user, setRoom}) => {
 
     const exitRoom = () => {
         navigate(`/`)
-        setRoom("")
     }
 
     const handleOnBlur = (e) => {
@@ -98,11 +96,11 @@ const Chat = ({socket, user, setRoom}) => {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!user) {
             return navigate("/login");
         }
-    }, [navigate, user])
+    }, [navigate, user])*/
 
     useEffect(() => {
         joinRoom()
@@ -143,7 +141,7 @@ const Chat = ({socket, user, setRoom}) => {
                         <ScrollToBottom scrollViewClassName={"scroll-body"} followButtonClassName={"scroll-button"}>
                             <div className={"body"}>
                                 {
-                                    messageList.length ? messages.map((item, i) => {
+                                    messageList.length ? messageList.map((item, i) => {
                                         return (
                                             <ChatCloud
                                                 author={item.author}

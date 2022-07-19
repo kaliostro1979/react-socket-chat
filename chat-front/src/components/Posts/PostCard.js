@@ -1,9 +1,9 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import CloseIcon from "../../icons/close-icon";
-import Preloader from "../Preloader/Preloader";
 import {doc, getDoc, writeBatch, deleteDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
+import postPlaceholder from "../../assets/images/post-placeholder.webp"
 
 
 const PostCard = ({post, willRemoved, userId}) => {
@@ -33,9 +33,7 @@ const PostCard = ({post, willRemoved, userId}) => {
                 {
                     post.title && post.text ? <div className={"post-card__wrapper"}>
                         <div className={"post-card__image-wrapper"}>
-                            {
-                                post.photo ?  <img src={post.photo} alt={post.post_id} className={"post-card__image"}/> : <Preloader/>
-                            }
+                            <img src={post.photo ? post.photo : postPlaceholder} alt={post.post_id} className={"post-card__image"}/>
                         </div>
                         <div className={"post-card__meta"}>
                             <h2 className={"post-card__title"}>{post.title}</h2>
