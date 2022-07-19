@@ -114,6 +114,10 @@ button, .button {
       color: blue;
     }
   }
+
+  &:disabled {
+    background-color: #888888;
+  }
 }
 
 .link {

@@ -16,7 +16,11 @@ function App() {
     useEffect(()=>{
         auth.onAuthStateChanged((user)=>{
             if (user){
-                dispatch(getCurrentUser(user.uid))
+                localStorage.setItem('current_user', JSON.stringify(user))
+                dispatch(getCurrentUser())
+            }else {
+                localStorage.removeItem('current_user')
+                dispatch(getCurrentUser())
             }
         })
     }, [dispatch])
@@ -25,13 +29,13 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 <main>
-                    <Header currentUser={Object.keys(user).length && user}/>
+                    <Header currentUser={user}/>
                     <div className="container">
                         <div className={"global-wrapper"}>
                             <div className={"global-left"}>
-                                <Sidebar currentUser={Object.keys(user).length && user}/>
+                                <Sidebar user={user}/>
                             </div>
-                            <Layout currentUser={Object.keys(user).length && user}/>
+                            <Layout user={user}/>
                         </div>
                     </div>
                 </main>

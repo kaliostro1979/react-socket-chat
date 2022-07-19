@@ -12,23 +12,23 @@ import SinglePost from "../components/Posts/SinglePost";
 import io from "socket.io-client";
 
 
-const Layout = ({currentUser}) => {
+const Layout = ({user}) => {
     const socket = io.connect("http://localhost:3001")
 
 
     return (
         <div className={"global-right"}>
             <Routes>
-                <Route path={"/"} element={<Home currentUser={currentUser && currentUser}/>}/>
-                <Route path={"/chat/:uid"} element={<Chat socket={socket} user={currentUser && currentUser}/>}/>
-                <Route path={"/login"} element={<Login user={currentUser && currentUser} socket={socket}/>}/>
-                <Route path={"/register"} element={<Register user={currentUser && currentUser}/>}/>
-                <Route path={"/user/:uid"} element={<User user={currentUser && currentUser}/>}>
+                <Route path={"/"} element={<Home currentUser={user}/>}/>
+                <Route path={"/chat/:uid"} element={<Chat socket={socket} user={user}/>}/>
+                <Route path={"/login"} element={<Login user={user} socket={socket}/>}/>
+                <Route path={"/register"} element={<Register user={user}/>}/>
+                <Route path={"/user/:uid"} element={<User user={user}/>}>
                     <Route path={"edit-profile"} element={<UserEditProfile/>} index/>
-                    <Route path={"publish-post"} element={<UserPost socket={socket} user={currentUser && currentUser}/>} exact/>
+                    <Route path={"publish-post"} element={<UserPost user={user}/>} exact/>
                     <Route path={"posts-list"} element={<UserPostsList/>} exact/>
                 </Route>
-                <Route path={"/post/:id"} element={<SinglePost user={currentUser && currentUser}/>}/>
+                <Route path={"/post/:id"} element={<SinglePost user={user}/>}/>
             </Routes>
         </div>
     );

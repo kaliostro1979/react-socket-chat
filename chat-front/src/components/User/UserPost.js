@@ -2,15 +2,16 @@ import React, {useState} from 'react';
 import Input from "../UI/Input";
 import AvatarIcon from "../../icons/avatar-icon";
 import Button from "../UI/Button";
-import {doc, writeBatch, getDoc, setDoc, collection} from "firebase/firestore";
+import {doc, setDoc, collection} from "firebase/firestore";
 import {db, storage} from "../../firebase/firebase";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 
 
-const UserPost = ({socket, user}) => {
+const UserPost = ({user}) => {
     const [photo, setPhoto] = useState(null)
     const [postTitle, setPostTitle] = useState("")
     const [postText, setPostText] = useState("")
+    const [disabled, setDisabled] = useState(false)
 
     const handlePostContent = (e)=>{
         switch (e.target.name){
@@ -27,6 +28,7 @@ const UserPost = ({socket, user}) => {
 
     const submitForm = ()=>{
         const photoRef = ref(storage, `postImages/${photo?.name + user.uid}`);
+        setDisabled(true)
         uploadBytes(photoRef, photo).then((snapshot) => {
             getDownloadURL(snapshot.ref).then(async (url) => {
                 const post = {
@@ -39,22 +41,14 @@ const UserPost = ({socket, user}) => {
                     photo: photo ? url : null
                 }
                 if (post.title !== "" && post.text !== ""){
-                    const userRef = doc(db, 'users', user.uid)
                     const postRef = doc(collection(db, "posts"))
                     post["post_id"] = postRef.id
                     setDoc(postRef, JSON.parse(JSON.stringify(post))).then(() => {
                     });
-                    const docSnap = await getDoc(userRef);
-                    if (docSnap.exists()) {
-                        const posts = docSnap.data().posts
-                        posts.push(post)
-                        const batch = writeBatch(db);
-                        batch.update(userRef, JSON.parse(JSON.stringify({posts: posts})));
-                        batch.commit().then();
-                        setPostTitle("")
-                        setPostText("")
-                        setPhoto(null)
-                    }
+                    setPostTitle("")
+                    setPostText("")
+                    setPhoto(null)
+                    setDisabled(false)
                 }
             })
         })
@@ -78,7 +72,7 @@ const UserPost = ({socket, user}) => {
                     <Input type={"file"} name={"avatar"} placeholder={"Post Photo"} id={"user-avatar"}
                            onChange={setPhoto}/>
                 </label>
-                <Button className={"button-primary"} text={"Publish"} type={"submit"} callBack={submitForm}/>
+                <Button className={"button-primary"} text={"Publish"} type={"submit"} callBack={submitForm} disabled={disabled}/>
             </div>
         </div>
     );

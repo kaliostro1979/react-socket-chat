@@ -13,6 +13,7 @@ import Preloader from "../Preloader/Preloader";
 
 
 const Chat = ({socket, user}) => {
+
     const dispatch = useDispatch()
     const messages = useSelector(state => state.messages)
     const [message, setMessage] = useState("")
@@ -96,11 +97,11 @@ const Chat = ({socket, user}) => {
         }
     }
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (!user) {
             return navigate("/login");
         }
-    }, [navigate, user])*/
+    }, [navigate, user])
 
     useEffect(() => {
         joinRoom()
@@ -127,7 +128,6 @@ const Chat = ({socket, user}) => {
     useEffect(() => {
         dispatch(getMessages(params.uid))
     }, [dispatch, params.uid, messageList])
-
 
     return (
         <>

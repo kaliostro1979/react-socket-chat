@@ -1,15 +1,10 @@
-import {doc, getDoc} from "firebase/firestore";
-import {db} from "../../firebase/firebase";
 import {GET_CURRENT_USER} from "../types";
 
-export const getCurrentUser = (id)=>{
+export const getCurrentUser = ()=>{
     return async (dispatch)=>{
-        const docRef = doc(db, "users", id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            dispatch(getCurrentUserAction(docSnap.data()))
-        }
+        const userJson = localStorage.getItem('current_user')
+        const user = userJson ? JSON.parse(userJson) : null
+        dispatch(getCurrentUserAction(user))
     }
 }
 
