@@ -2,15 +2,16 @@ import {GET_MESSAGES} from "../types";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
 
-export const getMessages = (id)=>{
-
+export const getMessages = (id, receiverId)=>{
     return async (dispatch)=>{
-        const docRef = doc(db, "messages", id);
-        const docSnap = await getDoc(docRef);
+        if (id){
+            const docRef = doc(db, `users/${id}/${receiverId}`, 'messages');
+            const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-            const messages = docSnap.data().messages
-            dispatch(getMessageAction(messages || []))
+            if (docSnap.exists()) {
+                const messages = docSnap.data().messages
+                dispatch(getMessageAction(messages))
+            }
         }
     }
 }

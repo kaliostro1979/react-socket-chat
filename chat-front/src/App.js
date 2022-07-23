@@ -16,10 +16,10 @@ function App() {
     useEffect(()=>{
         auth.onAuthStateChanged((user)=>{
             if (user){
-                localStorage.setItem('current_user', JSON.stringify(user))
+                sessionStorage.setItem('current_user', JSON.stringify(user))
                 dispatch(getCurrentUser())
             }else {
-                localStorage.removeItem('current_user')
+                sessionStorage.removeItem('current_user')
                 dispatch(getCurrentUser())
             }
         })
@@ -33,9 +33,9 @@ function App() {
                     <div className="container">
                         <div className={"global-wrapper"}>
                             <div className={"global-left"}>
-                                <Sidebar user={user}/>
+                                <Sidebar currentUser={user && user}/>
                             </div>
-                            <Layout user={user}/>
+                            <Layout user={user && user}/>
                         </div>
                     </div>
                 </main>

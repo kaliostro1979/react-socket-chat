@@ -8,7 +8,7 @@ import Title from "../UI/Title";
 import {doc, writeBatch} from "firebase/firestore";
 
 
-const Login = ({user, socket}) => {
+const Login = ({user}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")

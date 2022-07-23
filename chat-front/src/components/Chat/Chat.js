@@ -1,56 +1,68 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom'
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import ChatCloud from "./ChatCloud";
 import Title from "../UI/Title";
 import {useNavigate, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import Preloader from "../Preloader/Preloader";
+import io from "socket.io-client";
 import {doc, setDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
-import {useDispatch, useSelector} from "react-redux";
 import {getMessages} from "../../redux/actions/getMessages";
-import Preloader from "../Preloader/Preloader";
 
 
-const Chat = ({socket, user}) => {
-
-    const dispatch = useDispatch()
+const Chat = ({currentUser, onlineUsers, data}) => {
     const messages = useSelector(state => state.messages)
     const [message, setMessage] = useState("")
     const [messageList, setMessageList] = useState(messages)
     const navigate = useNavigate()
     const [typing, setTyping] = useState(false)
     const [typingUser, setTypingUser] = useState(null)
-    const params = useParams()
+    const dispatch = useDispatch()
 
-    const joinRoom = useCallback(() => {
-        if (user && params.uid === user.uid) {
-            socket.emit("join_room", params.uid)
-            return navigate(`/chat/${params.uid}`)
-        }
-    }, [navigate, params.uid, socket, user])
+    const params = useParams()
+    const socketRef = useRef()
+
+
+    useEffect(()=>{
+        socketRef.current = io("ws://localhost:3001")
+    }, [])
+
+    useEffect(()=>{
+        dispatch(getMessages(currentUser && currentUser.uid, params.uid))
+    }, [dispatch, params, currentUser])
 
     const sendMessage = async () => {
-        if (message !== "") {
+        const receiver = onlineUsers.find((user) => user.uid === params.uid)
 
-            const messageData = {
-                author: user && user.displayName,
-                message: message,
-                date: new Date(Date.now()).getHours().toString().padStart(2, '0') + ":" + new Date(Date.now()).getMinutes().toString().padStart(2, '0'),
-                typing: false,
-                room: params.uid
-            }
-
-            await socket.emit("send_message", messageData)
-            setMessageList((prev) => [...prev, messageData])
-
-            const messageRef = doc(db, 'messages', params.uid);
-            await setDoc(messageRef, {messages: [...messageList, messageData]}, {merge: true});
-
-            setMessage("")
-            setTyping(false)
-            setTypingUser(null)
+        const messageData = {
+            senderId: currentUser.uid,
+            receiverId: receiver && receiver.uid,
+            senderName: currentUser.displayName,
+            text: message,
+            date: new Date(Date.now()).getHours().toString().padStart(2, '0') + ":" + new Date(Date.now()).getMinutes().toString().padStart(2, '0'),
+            itemAuthor: currentUser && currentUser.displayName,
+            typing: false,
         }
+
+        socketRef.current.emit("sendMessage", messageData)
+        setMessageList((prev)=>[...prev, {...messageData, date: Date.now(), author: messageData.senderName}])
+
+        setMessage("")
+        setTyping(false)
+        setTypingUser(null)
+    }
+
+    useEffect(()=>{
+        if (data && onlineUsers.some(e => e.uid === data.senderId)){
+            setMessageList((prev)=>[...prev, {...data, date: Date.now(), author: data.senderName}])
+        }
+    }, [data, onlineUsers])
+
+    const handleInputMessage = (e) => {
+        setMessage(e.target.value)
     }
 
     const handleKeyDown = (e) => {
@@ -60,81 +72,43 @@ const Chat = ({socket, user}) => {
 
     }
 
-    const handleInputMessage = (e) => {
-        setMessage(e.target.value)
-
-        if (message !== "" || message.length > 1) {
-            socket.emit('start_chat', {
-                userId: user.uid,
-                userName: user.displayName,
-                room: params.uid,
-                typing: true
-            })
-        }
-
-        if (message.length <= 1) {
-            socket.emit('end_chat', {
-                userId: user.uid,
-                userName: user.displayName,
-                room: params.uid,
-                typing: false
-            })
-        }
-    }
-
-    const exitRoom = () => {
+    const exitRoom = async () => {
         navigate(`/`)
     }
 
     const handleOnBlur = (e) => {
         if (message.length <= 1) {
-            socket.emit('end_chat', {
-                userId: user.uid,
-                userName: user.displayName,
-                room: user.uid,
-                typing: false
-            })
+
         }
     }
 
     useEffect(() => {
-        if (!user) {
+        if (!currentUser) {
             return navigate("/login");
         }
-    }, [navigate, user])
+    }, [navigate, currentUser])
 
-    useEffect(() => {
-        joinRoom()
-    }, [joinRoom]);
+    useEffect(()=>{
+        if (data){
+            const messageRef = doc(db, 'users', currentUser.uid, data.senderId, 'messages' )
+            setDoc(messageRef, {messages: messageList}, {merge: true}).then();
+        }
+    }, [currentUser.uid, data, messageList])
 
-    useEffect(() => {
-        socket.on("receive_message", (data) => {
-            setMessageList((prev) => [...prev, data])
-            setTyping(false)
-        })
 
-        socket.on('receive_typing', (data) => {
-            setTyping(data.typing)
-            setTypingUser(data.userName)
-        })
-
-        socket.on('stop_typing', (data) => {
-            setTyping(data.typing)
-            setTypingUser(data.userName)
-        })
-
-    }, [socket])
-
-    useEffect(() => {
-        dispatch(getMessages(params.uid))
-    }, [dispatch, params.uid, messageList])
+   /* useEffect(()=>{
+        if (currentUser && data){
+            const messageRef = doc(db, 'users', currentUser.uid, data.senderId, 'messages' )
+            setDoc(messageRef, {messages: messageList}, {merge: true}).then();
+        }
+    }, [messageList, currentUser, data])*/
 
     return (
         <>
             {
-                !user ? <Preloader/> : <div className={"chat-main wrapper"}>
+                !currentUser ? <Preloader/> : <div className={"chat-main wrapper"}>
                     <div className={"header"}>
-                        <Title title={`Logged in as ${user && user.displayName} in Room N ${params.uid}`}
+                        <Title title={`Logged in as ${currentUser && currentUser.displayName}`}
                                className={'chat__title'}/>
                     </div>
                     <div className={"body-wrapper"}>
@@ -145,8 +119,8 @@ const Chat = ({socket, user}) => {
                                         return (
                                             <ChatCloud
                                                 author={item.author}
-                                                message={item.message}
-                                                name={user && user.displayName}
+                                                message={item.text}
+                                                name={currentUser && currentUser.displayName}
                                                 date={item.date}
                                                 itemAuthor={item.author}
                                                 key={i}

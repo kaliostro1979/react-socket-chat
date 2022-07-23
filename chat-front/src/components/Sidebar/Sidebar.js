@@ -19,7 +19,13 @@ const Sidebar = ({currentUser}) => {
         <>
             {
                 users.length ? users.map((user) => {
-                    return <UserCard user={user} key={user && user.uid} currentUser={currentUser}/>
+                    if (!currentUser){
+                        return <UserCard user={user} key={user && user.uid}/>
+                    }else if (currentUser && currentUser.uid !== user.uid){
+                        return <UserCard user={user} key={user && user.uid}/>
+                    }else {
+                        return null
+                    }
                 }) : null
             }
         </>
