@@ -13,26 +13,38 @@ import {db} from "../../firebase/firebase";
 import {getMessages} from "../../redux/actions/getMessages";
 
 
+
 const Chat = ({currentUser, onlineUsers, data}) => {
+    const dispatch = useDispatch()
     const messages = useSelector(state => state.messages)
+
     const [message, setMessage] = useState("")
     const [messageList, setMessageList] = useState(messages)
     const navigate = useNavigate()
     const [typing, setTyping] = useState(false)
     const [typingUser, setTypingUser] = useState(null)
-    const dispatch = useDispatch()
 
     const params = useParams()
     const socketRef = useRef()
 
 
-    useEffect(()=>{
+    useEffect(() => {
         socketRef.current = io("ws://localhost:3001")
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(getMessages(currentUser && currentUser.uid, params.uid))
-    }, [dispatch, params, currentUser])
+    }, [dispatch, params.uid, currentUser])
+
+    useEffect(()=>{
+        setMessageList(messages)
+    }, [messages])
+
+    useEffect(() => {
+        if (!currentUser) {
+            return navigate("/");
+        }
+    }, [navigate, currentUser])
 
     const sendMessage = async () => {
         const receiver = onlineUsers.find((user) => user.uid === params.uid)
@@ -48,18 +60,24 @@ const Chat = ({currentUser, onlineUsers, data}) => {
         }
 
         socketRef.current.emit("sendMessage", messageData)
-        setMessageList((prev)=>[...prev, {...messageData, date: Date.now(), author: messageData.senderName}])
+        setMessageList((prev) => [...prev, {...messageData, date: Date.now(), author: messageData.senderName}])
+
+        if (currentUser) {
+            const messageRef = doc(db, 'users', currentUser.uid, messageData.receiverId, 'messages')
+            setDoc(messageRef, {messageList}, {merge: true}).then();
+        }
 
         setMessage("")
         setTyping(false)
         setTypingUser(null)
     }
 
-    useEffect(()=>{
-        if (data && onlineUsers.some(e => e.uid === data.senderId)){
-            setMessageList((prev)=>[...prev, {...data, date: Date.now(), author: data.senderName}])
+    useEffect(() => {
+        if (data){
+            setMessageList((prev) => [...prev, {...data, date: Date.now(), author: data.senderName}])
         }
-    }, [data, onlineUsers])
+    }, [data])
+
 
     const handleInputMessage = (e) => {
         setMessage(e.target.value)
@@ -83,25 +101,12 @@ const Chat = ({currentUser, onlineUsers, data}) => {
     }
 
     useEffect(() => {
-        if (!currentUser) {
-            return navigate("/login");
+        if (data && currentUser) {
+            const messageRef = doc(db, 'users', currentUser.uid, data.senderId, 'messages')
+            setDoc(messageRef, {messageList}, {merge: true}).then();
         }
-    }, [navigate, currentUser])
+    }, [currentUser, data, messageList, params.uid])
 
-    useEffect(()=>{
-        if (data){
-            const messageRef = doc(db, 'users', currentUser.uid, data.senderId, 'messages' )
-            setDoc(messageRef, {messages: messageList}, {merge: true}).then();
-        }
-    }, [currentUser.uid, data, messageList])
-
-
-   /* useEffect(()=>{
-        if (currentUser && data){
-            const messageRef = doc(db, 'users', currentUser.uid, data.senderId, 'messages' )
-            setDoc(messageRef, {messages: messageList}, {merge: true}).then();
-        }
-    }, [messageList, currentUser, data])*/
 
     return (
         <>

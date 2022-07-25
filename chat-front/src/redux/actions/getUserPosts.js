@@ -7,7 +7,6 @@ export const getUserPosts = (id)=>{
     return async (dispatch)=>{
         const q = query(collection(db, "posts"), where("id", "==", id));
         const querySnapshot = await getDocs(q);
-
         querySnapshot.forEach((doc) => {
             userPosts.push(doc.data())
         });

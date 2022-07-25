@@ -41,11 +41,6 @@ const Header = ({currentUser}) => {
                                             {currentUser.displayName}
                                         </div>
                                     </Link>
-                                    {/*<Link to={`/chat/${currentUser.uid}`}>*/}
-                                    {/*    <div className={"home-current-user"}>*/}
-                                    {/*        <span>Enter your room</span>*/}
-                                    {/*    </div>*/}
-                                    {/*</Link>*/}
                                     <Button className={"button-secondary"} text={"Logout"} callBack={handleSignOut}/>
                                 </div> :
                                 <>

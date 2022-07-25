@@ -2,7 +2,7 @@ import React from 'react';
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.png"
 import {Link} from "react-router-dom";
 
-const UserCard = ({user}) => {
+const UserCard = ({user, socket}) => {
 
     return (
         <>

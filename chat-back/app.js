@@ -3,6 +3,8 @@ const app = express()
 const http = require('http')
 const cors = require('cors')
 const {Server} = require('socket.io')
+const { uuid } = require('uuidv4');
+
 
 
 app.use(cors())
@@ -18,28 +20,39 @@ const io = new Server(server, {
     }
 })
 
+let users = []
+
+const addUser = (uid, socketId) => {
+    if (uid) {
+        !users.some(user => user.uid === uid) &&
+        users.push({uid, socketId})
+    }
+}
+
+const removeUser = (socketId) => {
+    users = users.filter((user => user.socketId !== socketId))
+}
+
+const getUser = (uid) => users.find(user => {
+    return user.uid === uid
+})
 
 io.on('connection', (socket) => {
 
-    socket.on('join_room', (data) => {
-        socket.join(data)
+    socket.on("addUser", (uid) => {
+        addUser(uid, socket.id)
+        io.emit('getUsers', users)
     })
 
-    socket.on('send_message', (data) => {
-        console.log(data);
-        socket.to(data.room).emit("receive_message", data)
+    //Send and get message
+    socket.on("sendMessage", ({senderId, receiverId, text, senderName}) => {
+        const user = getUser(receiverId)
+        io.to(user && user.socketId).emit("getMessage", {senderId,text, senderName, receiverId})
     })
-
-    socket.on('start_chat', function(data){
-        socket.to(data.room).emit("receive_typing", data)
-    });
-
-    socket.on('end_chat', function(data){
-        socket.to(data.room).emit("stop_typing", data)
-    });
 
     socket.on('disconnect', () => {
-
+        removeUser(socket.id)
+        io.emit('getUsers', users)
     })
 })
 

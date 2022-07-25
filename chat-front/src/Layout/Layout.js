@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Route, Routes, useNavigate, useParams} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Home from "../components/Home/Home";
 import Chat from "../components/Chat/Chat";
 import Login from "../components/Auth/Login";
@@ -10,20 +10,15 @@ import UserPost from "../components/User/UserPost";
 import UserPostsList from "../components/User/UserPostsList";
 import SinglePost from "../components/Posts/SinglePost";
 import io from "socket.io-client";
-import {useDispatch, useSelector} from "react-redux";
-import {getMessages} from "../redux/actions/getMessages";
 
 
 
 
 const Layout = ({user}) => {
-    const socketRef = useRef()
     const navigate = useNavigate()
     const [onlineUsers, setOnlineUsers] = useState(null)
-    const params = useParams()
-    const messages = useSelector(state => state.messages)
-    const dispatch = useDispatch()
     let message = useRef()
+    const socketRef = useRef()
 
     useEffect(()=>{
         socketRef.current = io("ws://localhost:3001")
@@ -35,11 +30,6 @@ const Layout = ({user}) => {
         });
     }, [navigate])
 
-
-    useEffect(()=>{
-        dispatch(getMessages(user && user.uid, params.uid))
-    }, [dispatch, params, user])
-
     useEffect(()=>{
         if (user){
             socketRef.current.emit('addUser', user.uid)
@@ -47,13 +37,13 @@ const Layout = ({user}) => {
                 setOnlineUsers(users)
             });
         }
-    }, [user, params.uid])
+    }, [user])
 
     return (
         <div className={"global-right"}>
             <Routes>
                 <Route path={"/"} element={<Home currentUser={user}/>}/>
-                <Route path={"/chat/:uid"} element={<Chat currentUser={user} onlineUsers={onlineUsers && onlineUsers} data={message.current} messages={messages}/>}/>
+                <Route path={"/chat/:uid"} element={<Chat currentUser={user} onlineUsers={onlineUsers && onlineUsers} data={message.current}/>}/>
                 <Route path={"/login"} element={<Login user={user}/>}/>
                 <Route path={"/register"} element={<Register user={user}/>}/>
                 <Route path={"/user/:uid"} element={<User user={user}/>}>
