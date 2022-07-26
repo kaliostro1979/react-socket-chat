@@ -19,6 +19,7 @@ const Chat = ({currentUser, onlineUsers, data}) => {
     const messages = useSelector(state => state.messages)
 
     const [message, setMessage] = useState("")
+    const [sendingMessage, setSendingMessage] = useState(null)
     const [messageList, setMessageList] = useState(messages)
     const navigate = useNavigate()
     const [typing, setTyping] = useState(false)
@@ -60,17 +61,20 @@ const Chat = ({currentUser, onlineUsers, data}) => {
         }
 
         socketRef.current.emit("sendMessage", messageData)
+        setSendingMessage({...messageData, date: Date.now(), author: messageData.senderName})
         setMessageList((prev) => [...prev, {...messageData, date: Date.now(), author: messageData.senderName}])
-
-        if (currentUser) {
-            const messageRef = doc(db, 'users', currentUser.uid, messageData.receiverId, 'messages')
-            setDoc(messageRef, {messageList}, {merge: true}).then();
-        }
 
         setMessage("")
         setTyping(false)
         setTypingUser(null)
     }
+
+    useEffect(()=>{
+        if (currentUser && sendingMessage) {
+            const messageRef = doc(db, 'users', currentUser.uid, sendingMessage.receiverId, 'messages')
+            setDoc(messageRef, {messageList}, {merge: true}).then();
+        }
+    }, [messageList, sendingMessage, currentUser])
 
     useEffect(() => {
         if (data){
