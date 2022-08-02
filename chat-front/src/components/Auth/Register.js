@@ -59,9 +59,9 @@ const Register = ({user}) => {
                                 }).then(() => {
                                     const userRef = doc(db, 'users', user.uid);
                                     setDoc(userRef, JSON.parse(JSON.stringify(user))).then(() => {
-                                        setDoc(userRef, {loggedIn: true, room: user.uid, posts:[]}, {merge: true}).then();
+                                        setDoc(userRef, {status: "online", newMessages: {}, posts:[]}, {merge: true}).then();
                                         const batch = writeBatch(db);
-                                        batch.update(userRef, {loggedIn: true, room: user.uid, posts:[]});
+                                        batch.update(userRef, {status: "online", newMessages: {}, posts:[]});
                                         batch.commit().then();
                                     });
                                 }).catch((error) => {
@@ -76,7 +76,7 @@ const Register = ({user}) => {
                         }).then(() => {
                             const userRef = doc(db, 'users', user.uid);
                             setDoc(userRef, JSON.parse(JSON.stringify(user))).then(() => {
-                                setDoc(userRef, {loggedIn: true, room: user.uid, posts:[]}, {merge: true}).then();
+                                setDoc(userRef, {status: "online", newMessages: {}, posts:[]}, {merge: true}).then();
                             });
                             navigate("/start-chat")
                         }).catch((error) => {

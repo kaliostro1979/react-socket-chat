@@ -9,6 +9,7 @@ const Sidebar = ({currentUser, socket}) => {
     const users = useSelector(state => state.users)
     const dispatch = useDispatch()
 
+
     useEffect(()=>{
         onSnapshot(collection(db, "users"),  (snapshot)=>{
             dispatch(getUsers())
@@ -19,13 +20,7 @@ const Sidebar = ({currentUser, socket}) => {
         <>
             {
                 users.length ? users.map((user) => {
-                    if (!currentUser){
-                        return <UserCard user={user} key={user && user.uid}/>
-                    }else if (currentUser && currentUser.uid !== user.uid){
-                        return <UserCard user={user} key={user && user.uid} socket={socket}/>
-                    }else {
-                        return null
-                    }
+                    return <UserCard user={user} key={user && user.uid} socket={socket}/>
                 }) : null
             }
         </>

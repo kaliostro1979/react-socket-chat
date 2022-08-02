@@ -10,6 +10,7 @@ import UserPost from "../components/User/UserPost";
 import UserPostsList from "../components/User/UserPostsList";
 import SinglePost from "../components/Posts/SinglePost";
 import io from "socket.io-client";
+import NewChatForm from "../components/Chat/NewChatForm";
 
 
 
@@ -20,7 +21,7 @@ const Layout = ({user}) => {
     let message = useRef()
     const socketRef = useRef()
 
-    useEffect(()=>{
+ /*   useEffect(()=>{
         socketRef.current = io("ws://localhost:3001")
         socketRef.current.on("getMessage", async (data) => {
             message.current = data
@@ -37,13 +38,13 @@ const Layout = ({user}) => {
                 setOnlineUsers(users)
             });
         }
-    }, [user])
+    }, [user])*/
 
     return (
         <div className={"global-right"}>
             <Routes>
                 <Route path={"/"} element={<Home currentUser={user}/>}/>
-                <Route path={"/chat/:uid"} element={<Chat currentUser={user} onlineUsers={onlineUsers && onlineUsers} data={message.current}/>}/>
+                <Route path={"/chat"} element={<NewChatForm/>}/>
                 <Route path={"/login"} element={<Login user={user}/>}/>
                 <Route path={"/register"} element={<Register user={user}/>}/>
                 <Route path={"/user/:uid"} element={<User user={user}/>}>

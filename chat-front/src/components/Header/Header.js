@@ -19,7 +19,7 @@ const Header = ({currentUser}) => {
     async function changeLoggedInStatus() {
         const batch = writeBatch(db);
         const userRef = doc(db, 'users', currentUser.uid);
-        batch.update(userRef, {loggedIn: false, room: currentUser.uid});
+        batch.update(userRef, {status: "offline"});
         await batch.commit();
         navigate("/")
     }
@@ -41,6 +41,7 @@ const Header = ({currentUser}) => {
                                             {currentUser.displayName}
                                         </div>
                                     </Link>
+                                    <Link to={`/chat`} className={"button button-primary"}>Chat</Link>
                                     <Button className={"button-secondary"} text={"Logout"} callBack={handleSignOut}/>
                                 </div> :
                                 <>

@@ -36,7 +36,7 @@ const Login = ({user}) => {
                 .then(async (userCredential) => {
                     const batch = writeBatch(db);
                     const userRef = doc(db, 'users', userCredential.user.uid);
-                    batch.update(userRef, {loggedIn: true});
+                    batch.update(userRef, {status: "online"});
                     await batch.commit();
                     navigate("/")
                 })

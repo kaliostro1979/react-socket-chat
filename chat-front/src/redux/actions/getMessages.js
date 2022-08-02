@@ -3,8 +3,9 @@ import {doc, getDoc} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
 
 export const getMessages = (id, receiverId)=>{
+
     return async (dispatch)=>{
-        if (id){
+        if (id && receiverId){
             const docRef = doc(db, `users`, id, receiverId, 'messages');
             const docSnap = await getDoc(docRef);
 
