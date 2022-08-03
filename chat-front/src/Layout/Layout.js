@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import Home from "../components/Home/Home";
-import Chat from "../components/Chat/Chat";
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import User from "../components/User/User";

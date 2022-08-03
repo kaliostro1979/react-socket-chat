@@ -62,10 +62,10 @@ const NewChatForm = () => {
                                         <div className={"message-wrapper"}>
                                             <div className={"sender-info"}>
                                                 <img src={message.from.photoURL} alt="" className={"sender-image"}/>
-                                                <p>{message.from.displayName}</p>
+                                                <p className={"sender-name"}>{message.from.displayName}</p>
                                             </div>
-                                            <p>{message.content}</p>
-                                            <small>{message.date} - {message.time}</small>
+                                            <p className={"message-content"}>{message.content}</p>
+                                            <small className={"message-date"}>{message.date} - {message.time}</small>
                                         </div>
                                     </div>
                                 )

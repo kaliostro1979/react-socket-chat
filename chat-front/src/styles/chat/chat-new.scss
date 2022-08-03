@@ -1,7 +1,8 @@
 .chat-messages__container {
   height: 40vh;
   width: 100%;
-  border: 1px solid #bdbdbd;
+  padding: 0 20px;
+  border: 1px solid green;
   border-radius: 4px;
   margin-bottom: 20px;
   overflow-y: auto;
@@ -10,26 +11,64 @@
 .message-container {
   display: flex;
 
+  .message-content{
+    padding: 10px 15px;
+    color: white;
+    background-color: brown;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
   &.you {
     justify-content: flex-end;
+
+    .message-content {
+      background-color: green;
+    }
   }
 }
 
 .message-wrapper {
+  position: relative;
   margin-bottom: 20px;
+  border: 1px solid green;
+  border-radius: 6px;
+  padding: 15px;
+
+   &:before {
+     content: "";
+     position: absolute;
+     bottom: -7px;
+     right: 10px;
+     width: 10px;
+     height: 10px;
+     transform: rotate(45deg);
+     background-color: #edebeb;
+     border-right: 1px solid green;
+     border-bottom: 1px solid green;
+   }
 }
 
 .sender-info {
   display: flex;
   align-items: center;
+  margin-bottom: 15px;
+}
+
+.sender-name {
+  font-weight: 700;
 }
 
 .sender-image {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
   object-fit: cover;
   object-position: center;
   margin-right: 10px;
+}
+
+.message-date {
+  font-size: 12px;
 }

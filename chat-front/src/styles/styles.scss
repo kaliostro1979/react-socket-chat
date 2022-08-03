@@ -1,12 +1,11 @@
 //Global styles and Global components
 @import "global";
 @import "main";
-@import "chat/chat";
 @import "fonts";
 @import "preloader/preloader";
 
 //Chat
-@import "chat/start-chat";
+@import "chat/chat-new";
 
 //Home
 @import "home/home";
@@ -25,6 +24,3 @@
 @import "post/post-card";
 @import "post/single-post";
 
-
-//New styles
-@import "chat/chat-new";
