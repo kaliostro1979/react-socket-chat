@@ -1,7 +1,35 @@
 .chat-messages__container {
-  min-height: 600px;
+  height: 40vh;
   width: 100%;
   border: 1px solid #bdbdbd;
   border-radius: 4px;
   margin-bottom: 20px;
+  overflow-y: auto;
+}
+
+.message-container {
+  display: flex;
+
+  &.you {
+    justify-content: flex-end;
+  }
+}
+
+.message-wrapper {
+  margin-bottom: 20px;
+}
+
+.sender-info {
+  display: flex;
+  align-items: center;
+}
+
+.sender-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  object-fit: cover;
+  object-position: center;
+  margin-right: 10px;
 }

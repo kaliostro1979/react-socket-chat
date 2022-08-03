@@ -13,7 +13,7 @@ function App() {
 
     const user = useSelector(state=>state.currentUser)
     const dispatch = useDispatch()
-    const [currentRoom, setCurrentRoom] = useState([])
+    const [currentRoom, setCurrentRoom] = useState(null)
     const [members, setMembers] = useState([])
     const [messages, setMessages] = useState([])
     const [privateMemberMsg, setPrivateMemberMsg] = useState({})

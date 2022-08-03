@@ -16,6 +16,11 @@
     background-color: lightblue;
     color: white;
 
+    &[data-disabled="true"] {
+      background-color: lightgray;
+      cursor: default;
+    }
+
     .user-status {
       color: green;
     }
