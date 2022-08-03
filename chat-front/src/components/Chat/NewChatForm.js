@@ -5,16 +5,23 @@ import {AppContext, socket} from "../../context/appContext";
 const NewChatForm = () => {
     const user = useSelector(state => state.currentUser)
     const [message, setMessage] = useState("")
-    const { currentRoom, setCurrentRoom,  } = useContext(AppContext)
+    const { currentRoom, setCurrentRoom, setMessages, messages  } = useContext(AppContext)
 
 
     const handleSubmit =(event)=>{
         event.preventDefault()
         if (!message) return
         const roomId = currentRoom
-        socket.emit("message-room", roomId, message, user)
+        const date = JSON.stringify(new Date(Date.now()).getHours().toString().padStart(2, '0') + ":" + new Date(Date.now()).getMinutes().toString().padStart(2, '0'))
+        socket.emit("message-room", roomId, message, user, date)
         setMessage("")
     }
+
+    socket.off("room-messages").on("room-messages", (roomMessages)=>{
+        setMessages(roomMessages)
+    })
+
+    console.log(messages);
 
     return (
         <div className={"chat-wrapper"}>

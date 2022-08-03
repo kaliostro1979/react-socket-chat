@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const db = require("./firebaseConfig");
+const {merge} = require("nodemon/lib/utils");
 
 const rooms = ['tech', 'finance', 'general', 'crypto']
 
@@ -19,12 +20,22 @@ const io = require('socket.io')(server, {
     }
 })
 
+let messages = []
+
 const getLastMessagesFromRoom = async (room)=>{
+    const postRef = db.collection("messages")
+    await postRef.get().then((snapshot)=>{
+        snapshot.forEach(document=>{
+            messages.push(document.data())
+        })
+    })
+
     /*let roomMessages = await Message.aggregate([
         {$match: {to: room}},
         {$group: {_id: "$date", messagesByDate: {$push: "$$ROOT"}}}
     ])
     return roomMessages*/
+    return messages
 }
 
 /*const sortRoomMessagesByDate = (messages)=>{
@@ -44,20 +55,22 @@ io.on("connection", (socket)=>{
     socket.on("join-room", async (newRoom, previousRoom)=>{
         socket.join(newRoom)
         socket.leave(previousRoom)
-        let roomMessages = await getLastMessagesFromRoom(newRoom)
+        let roomMessages = await getLastMessagesFromRoom()
         /*roomMessages = sortRoomMessagesByDate(roomMessages)*/
         socket.emit("room-messages", roomMessages)
     })
 
-    socket.on("message-room", async(room, content, sender, time, date)=>{
+    socket.on("message-room", async(room, content, sender, date)=>{
         /*const newMessage = await Message.create({content, from: sender, time, date, to: room})*/
         const postRef = db.collection("messages")
-        const data = {room, content, sender}
-        await postRef.doc().set(data)
-        //let roomMessages = await getLastMessagesFromRoom(room)
-       /* roomMessages = sortRoomMessagesByDate(roomMessages)*/
-        //io.to(room).emit("room-messages", roomMessages)
+        const data = {content, from: sender, date, to: room}
+        await postRef.doc().set(data, {merge: true})
 
+        let roomMessages = await getLastMessagesFromRoom()
+
+       /* roomMessages = sortRoomMessagesByDate(roomMessages)*/
+        console.log(roomMessages);
+        io.to(room).emit("room-messages", roomMessages)
         socket.broadcast.emit("notifications", room)
     })
 })
