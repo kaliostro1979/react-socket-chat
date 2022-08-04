@@ -1,17 +1,18 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import UserCard from "../UserCard/UserCard";
 import {useDispatch, useSelector} from "react-redux";
 import {getUsers} from "../../redux/actions/getUsers";
 import {collection, onSnapshot} from "firebase/firestore";
 import {db} from "../../firebase/firebase";
+import {socket} from "../../context/appContext";
 
-const Sidebar = ({currentUser, socket}) => {
+const Sidebar = () => {
     const users = useSelector(state => state.users)
     const dispatch = useDispatch()
 
 
     useEffect(()=>{
-        onSnapshot(collection(db, "users"),  (snapshot)=>{
+        onSnapshot(collection(db, "users"),  ()=>{
             dispatch(getUsers())
         })
     }, [dispatch])

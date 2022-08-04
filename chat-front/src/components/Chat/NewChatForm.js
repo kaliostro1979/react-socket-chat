@@ -1,12 +1,21 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useSelector} from "react-redux";
+import Picker, {SKIN_TONE_MEDIUM_DARK} from 'emoji-picker-react';
 import {AppContext, socket} from "../../context/appContext";
+import WelcomeImage from "../../assets/images/welcome.png"
+import emoji from "../../assets/images/emoji.png"
 
 const NewChatForm = () => {
     const user = useSelector(state => state.currentUser)
     const [message, setMessage] = useState("")
-    const {currentRoom, setCurrentRoom, setMessages, messages} = useContext(AppContext)
+    const {currentRoom, setMessages, messages} = useContext(AppContext)
     const scrollRef = useRef(null)
+    const [showPicker, setShowPicker] = useState(false);
+
+    const onEmojiClick = (event, emojiObject) => {
+        setMessage(prevInput => prevInput + emojiObject.emoji);
+        setShowPicker(false);
+    };
 
     useEffect(() => {
         scrollToBottom()
@@ -25,11 +34,15 @@ const NewChatForm = () => {
         return month + "/" + day + "/" + year;
     }
 
-    const todayDate = getFormattedDate();
+    const handleMessage = (event)=>{
+        setMessage(event.target.value)
+    }
 
+    const todayDate = getFormattedDate();
     const handleSubmit = (event) => {
         event.preventDefault()
         if (!message) return
+
         const today = new Date();
         const minutes = today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
         const seconds = today.getSeconds() < 10 ? "0" + today.getSeconds() : today.getSeconds();
@@ -50,36 +63,63 @@ const NewChatForm = () => {
     return (
         <div className={"chat-wrapper"}>
             {
-                !currentRoom ? <div>Welcome to chat!! Please choose room</div> : <>
-                    <div className={"chat-messages__container"}>
-                        {
-                            messages && messages.map((message, index) => {
+                !currentRoom ? <div>
+                        <div className={"welcome-image"}>
+                            <img src={WelcomeImage} alt=""/>
+                        </div>
+                        <p className={"welcome-text"}>Welcome to chat!! Please choose room</p>
+                    </div> :
+                    <>
+                        <div className={"chat-messages__container"}>
+                            {
+                                messages && messages.map((message, index) => {
 
-                                return (
-                                    <div
-                                        className={user && user.uid === message.from.uid ? "message-container you" : "message-container"}
-                                        key={index}>
-                                        <div className={"message-wrapper"}>
-                                            <div className={"sender-info"}>
-                                                <img src={message.from.photoURL} alt="" className={"sender-image"}/>
-                                                <p className={"sender-name"}>{message.from.displayName}</p>
+                                    return (
+                                        <div
+                                            className={user && user.uid === message.from.uid ? "message-container you" : "message-container"}
+                                            key={index}>
+                                            <div className={"message-wrapper"}>
+                                                <div className={"sender-info"}>
+                                                    <img src={message.from.photoURL} alt="" className={"sender-image"}/>
+                                                    <p className={"sender-name"}>{message.from.displayName}</p>
+                                                </div>
+                                                <p className={"message-content"}>{message.content}</p>
+                                                <small className={"message-date"}>{message.date} - {message.time}</small>
                                             </div>
-                                            <p className={"message-content"}>{message.content}</p>
-                                            <small className={"message-date"}>{message.date} - {message.time}</small>
                                         </div>
+                                    )
+                                })
+                            }
+                            <div ref={scrollRef}></div>
+                        </div>
+                        <div className={"chat-message__form"}>
+                            <form onSubmit={handleSubmit}>
+                                <div className={"form-input__container"}>
+                                    <div className={"emoji-wrapper"}>
+                                        {
+                                            showPicker && <Picker
+                                                onEmojiClick={onEmojiClick}
+                                                disableAutoFocus={true}
+                                                skinTone={SKIN_TONE_MEDIUM_DARK}
+                                                groupNames={{ smileys_people: 'PEOPLE' }}
+                                                native
+                                            />
+                                        }
                                     </div>
-                                )
-                            })
-                        }
-                        <div ref={scrollRef}></div>
-                    </div>
-                    <div className={"chat-message__form"}>
-                        <form onSubmit={handleSubmit}>
-                            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}/>
-                            <button>Send</button>
-                        </form>
-                    </div>
-                </>
+                                    <div className={"form-input__wrapper"}>
+                                        <img
+                                            className="emoji-icon"
+                                            src={emoji}
+                                            onClick={() => setShowPicker(val => !val)}
+                                            alt={"emoji"}
+                                        />
+                                        <input type="text" value={message} onChange={handleMessage}/>
+                                    </div>
+                                </div>
+                                <button>Send</button>
+                            </form>
+                        </div>
+                    </>
             }
         </div>
     );

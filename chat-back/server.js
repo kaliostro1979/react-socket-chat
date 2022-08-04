@@ -2,9 +2,6 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const db = require("./firebaseConfig");
-const {merge} = require("nodemon/lib/utils");
-
-const rooms = ['tech', 'finance', 'general', 'crypto']
 
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
@@ -55,16 +52,14 @@ io.on("connection", (socket)=>{
     })
 
     socket.on("message-room", async(room, content, sender, time, date)=>{
-        /*const newMessage = await Message.create({content, from: sender, time, date, to: room})*/
         const postRef = db.collection("messages")
         const data = {content, from: sender, date, time, to: room}
         await postRef.doc(time).set(data, {merge: true})
 
         let roomMessages = await getLastMessagesFromRoom(room)
-
         roomMessages = sortRoomMessagesByDate(roomMessages)
         io.to(room).emit("room-messages", roomMessages)
-        socket.broadcast.emit("notifications", room)
+        socket.broadcast.emit("notifications", sender.uid)
     })
 })
 

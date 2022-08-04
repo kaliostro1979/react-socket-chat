@@ -1,11 +1,36 @@
+.welcome-image {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.welcome-text {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 900;
+  margin-top: 50px;
+  color: #ff4c02;
+}
+
 .chat-messages__container {
   height: 40vh;
   width: 100%;
-  padding: 0 20px;
+  padding: 20px;
   border: 1px solid green;
   border-radius: 4px;
   margin-bottom: 20px;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
 }
 
 .message-container {
@@ -16,7 +41,7 @@
     color: white;
     background-color: brown;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 18px;
   }
 
   &.you {
@@ -71,4 +96,38 @@
 
 .message-date {
   font-size: 12px;
+}
+
+.form-input__container {
+  position: relative;
+}
+
+.emoji-wrapper {
+  position: absolute;
+}
+
+.form-input__wrapper {
+  position: relative;
+}
+
+.emoji-wrapper {
+  position: absolute;
+  bottom: 63px;
+  right: 0;
+}
+
+.emoji-icon {
+  position: absolute;
+  width: 20px;
+  right: 20px;
+  top: 11px;
+  cursor: pointer;
+}
+
+.notification-label{
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
 }
